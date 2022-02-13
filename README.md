@@ -9,5 +9,5 @@ The app uses [python-broadlink](https://github.com/mjg59/python-broadlink), so p
 Install Python and be sure to add python to your path variable. Install python-broadlink by issuing this command in a commandopromt "pip3 install broadlink".
 Install win32 "pip install pypiwin32"
 
-Run Setup.exe.
+Run Setup.exe from the Install directory.
 
