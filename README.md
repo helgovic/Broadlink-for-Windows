@@ -1,4 +1,4 @@
-# Broadlink-for-Windows-
+# Broadlink-for-Windows
 Windows app for Broadlink WiFi remotes
 
 With this app you can control a Broadlink WiFi universal remote. Add devices and buttons. Create macros. 
