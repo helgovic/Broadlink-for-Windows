@@ -11,3 +11,14 @@ Install win32 "pip install pypiwin32"
 
 Run Setup.exe from the Install directory.
 
+How to use the commandline interface.
+
+   OBS. The gui app (WinBroadlink.exe) has to be started.
+
+   Run <Your install directory (e.g C:\Program Files (x86)\WinBroadlink)>\SendBLCommand.exe.
+   
+   Parameters:
+
+      --help Get parameterinfo
+      --sendcmd "Your Broadlink device name (e.g. "MyBLDevice")" "Device name" "Button name" 
+      --sendmacro "Your Broadlink device name (e.g. "MyBLDevice")" "Macro name"
