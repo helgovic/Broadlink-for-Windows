@@ -48,14 +48,14 @@ uses
 procedure TFAddMacroButton.BAddMacroButtonClick(Sender: TObject);
 begin
 
-   if FMacros.SGMacroButtons.Cells[0, FMacros.SGMacroButtons.RowCount - 1] <> ''
+   if FMacros.SGMacroButtons.Cells[1, FMacros.SGMacroButtons.RowCount - 1] <> ''
    then
       FMacros.SGMacroButtons.RowCount := FMacros.SGMacroButtons.RowCount + 1;
 
-   FMacros.SGMacroButtons.Cells[0, FMacros.SGMacroButtons.RowCount - 1] := LBAMBDevices.Items[LBAMBDevices.ItemIndex];
-   FMacros.SGMacroButtons.Cells[1, FMacros.SGMacroButtons.RowCount - 1] := TDevObj(LBAMBDevices.Items.Objects[LBAMBDevices.ItemIndex]).DevType;
-   FMacros.SGMacroButtons.Cells[2, FMacros.SGMacroButtons.RowCount - 1] := LBAMBButtons.Items[LBAMBButtons.ItemIndex];
-   FMacros.SGMacroButtons.Cells[3, FMacros.SGMacroButtons.RowCount - 1] := '0';
+   FMacros.SGMacroButtons.Cells[1, FMacros.SGMacroButtons.RowCount - 1] := LBAMBDevices.Items[LBAMBDevices.ItemIndex];
+   FMacros.SGMacroButtons.Cells[2, FMacros.SGMacroButtons.RowCount - 1] := TDevObj(LBAMBDevices.Items.Objects[LBAMBDevices.ItemIndex]).DevType;
+   FMacros.SGMacroButtons.Cells[3, FMacros.SGMacroButtons.RowCount - 1] := LBAMBButtons.Items[LBAMBButtons.ItemIndex];
+   FMacros.SGMacroButtons.Cells[4, FMacros.SGMacroButtons.RowCount - 1] := '0';
 
 end;
 

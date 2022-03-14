@@ -49,7 +49,8 @@ object FMacros: TFMacros
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 3
-    ExplicitTop = 430
+    ExplicitTop = 413
+    ExplicitWidth = 1071
     object BNewMacro: TButton
       Left = 593
       Top = 16
@@ -160,6 +161,7 @@ object FMacros: TFMacros
       BevelOuter = bvNone
       ItemHeight = 15
       TabOrder = 0
+      OnClick = LBMacrosClick
       ExplicitHeight = 383
     end
   end
@@ -187,12 +189,10 @@ object FMacros: TFMacros
       BevelOuter = bvNone
       BorderStyle = bsNone
       Color = clWhite
-      ColCount = 4
       Ctl3D = True
       DefaultRowHeight = 24
       DefaultDrawing = True
       DrawingStyle = gdsClassic
-      FixedCols = 0
       RowCount = 2
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
@@ -208,6 +208,7 @@ object FMacros: TFMacros
       TabOrder = 0
       OnClick = SGMacroButtonsClick
       OnDragOver = SGMacroButtonsDragOver
+      ActiveRowShow = True
       GridLineColor = 15987699
       GridFixedLineColor = 15987699
       HoverRowCells = [hcNormal, hcSelected]
@@ -224,12 +225,13 @@ object FMacros: TFMacros
       ActiveCellFont.Name = 'Tahoma'
       ActiveCellFont.Style = [fsBold]
       ColumnHeaders.Strings = (
+        ''
         'Device Name'
         'Device Type'
         'Button Name'
         'Wait Milliseconds')
       ColumnSize.Stretch = True
-      ColumnSize.StretchColumn = 0
+      ColumnSize.StretchColumn = 1
       ColumnSize.SynchNormalCellsOnly = True
       ControlLook.FixedGradientHoverFrom = clGray
       ControlLook.FixedGradientHoverTo = clWhite
@@ -263,7 +265,7 @@ object FMacros: TFMacros
       FilterDropDown.Font.Name = 'Tahoma'
       FilterDropDown.Font.Style = []
       FilterDropDownClear = '(All)'
-      FixedColWidth = 557
+      FixedColWidth = 20
       FixedRowHeight = 24
       FixedFont.Charset = DEFAULT_CHARSET
       FixedFont.Color = clBlack
@@ -312,10 +314,12 @@ object FMacros: TFMacros
       SearchFooter.MatchCaseCaption = 'Match case'
       Version = '6.2.1.1'
       WordWrap = False
+      ExplicitLeft = 6
       ColWidths = (
-        557
-        202
         20
+        675
+        20
+        64
         64)
       RowHeights = (
         24

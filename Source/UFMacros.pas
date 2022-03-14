@@ -43,6 +43,7 @@ type
     procedure SGMacroButtonsOleDrop(Sender: TObject; ARow, ACol: Integer;
       data: string; var Allow: Boolean);
     procedure BTestMacroClick(Sender: TObject);
+    procedure LBMacrosClick(Sender: TObject);
   private
     procedure LoadMacros;
     procedure LoadButtons;
@@ -62,6 +63,15 @@ uses
 
 {$R *.dfm}
 
+procedure TFMacros.LBMacrosClick(Sender: TObject);
+begin
+
+   if LBMacros.ItemIndex >= 0
+   then
+      LoadButtons;
+
+end;
+
 procedure TFMacros.LoadButtons;
 begin
 
@@ -75,20 +85,20 @@ begin
    while not DMBroadlink.QGetMacroButtons.Eof do
       begin
 
-         if SGMacroButtons.Cells[0, SGMacroButtons.RowCount - 1] <> ''
+         if SGMacroButtons.Cells[1, SGMacroButtons.RowCount - 1] <> ''
          then
             SGMacroButtons.RowCount := SGMacroButtons.RowCount + 1;
 
-         SGMacroButtons.Cells[0, SGMacroButtons.RowCount - 1] := DMBroadlink.QGetMacroButtons.FieldByName('DeviceName').AsString;
-         SGMacroButtons.Cells[1, SGMacroButtons.RowCount - 1] := DMBroadlink.QGetMacroButtons.FieldByName('Type').AsString;
-         SGMacroButtons.Cells[2, SGMacroButtons.RowCount - 1] := DMBroadlink.QGetMacroButtons.FieldByName('ButtonName').AsString;
-         SGMacroButtons.Cells[3, SGMacroButtons.RowCount - 1] := DMBroadlink.QGetMacroButtons.FieldByName('wait').AsString;
+         SGMacroButtons.Cells[1, SGMacroButtons.RowCount - 1] := DMBroadlink.QGetMacroButtons.FieldByName('DeviceName').AsString;
+         SGMacroButtons.Cells[2, SGMacroButtons.RowCount - 1] := DMBroadlink.QGetMacroButtons.FieldByName('Type').AsString;
+         SGMacroButtons.Cells[3, SGMacroButtons.RowCount - 1] := DMBroadlink.QGetMacroButtons.FieldByName('ButtonName').AsString;
+         SGMacroButtons.Cells[4, SGMacroButtons.RowCount - 1] := DMBroadlink.QGetMacroButtons.FieldByName('wait').AsString;
 
          DMBroadlink.QGetMacroButtons.Next;
 
       end;
 
-   if SGMacroButtons.Cells[0, 1] <> ''
+   if SGMacroButtons.Cells[1, 1] <> ''
    then
       begin
          SGMacroButtons.Row := 1;
@@ -128,9 +138,9 @@ procedure TFMacros.SGMacroButtonsClick(Sender: TObject);
 begin
 
    if (SGMacroButtons.Row > 0) and
-      (SGMacroButtons.Cells[0, SGMacroButtons.Row] <> '')
+      (SGMacroButtons.Cells[1, SGMacroButtons.Row] <> '')
    then
-      AEWait.Text := SGMacroButtons.Cells[3, SGMacroButtons.Row];
+      AEWait.Text := SGMacroButtons.Cells[4, SGMacroButtons.Row];
 
 end;
 
@@ -156,9 +166,9 @@ procedure TFMacros.AEWaitChange(Sender: TObject);
 begin
 
    if (SGMacroButtons.Row > 0) and
-      (SGMacroButtons.Cells[0, SGMacroButtons.Row] <> '')
+      (SGMacroButtons.Cells[1, SGMacroButtons.Row] <> '')
    then
-      SGMacroButtons.Cells[3, SGMacroButtons.Row] := AEWait.Text;
+      SGMacroButtons.Cells[4, SGMacroButtons.Row] := AEWait.Text;
 
 end;
 
@@ -175,7 +185,7 @@ end;
 procedure TFMacros.BDeleteButtonClick(Sender: TObject);
 begin
 
-   if MessageDlg('Delete ' + SGMacroButtons.Cells[0, SGMacroButtons.Row] + '/' + SGMacroButtons.Cells[1, SGMacroButtons.Row] + '?', TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbOK, TMsgDlgBtn.mbCancel], 0) = mrOK
+   if MessageDlg('Delete ' + SGMacroButtons.Cells[1, SGMacroButtons.Row] + '/' + SGMacroButtons.Cells[2, SGMacroButtons.Row] + '?', TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbOK, TMsgDlgBtn.mbCancel], 0) = mrOK
    then
       SGMacroButtons.RemoveRows(SGMacroButtons.Row, 1);
 
@@ -269,26 +279,26 @@ begin
    for i := 1 to SGMacroButtons.RowCount - 1 do
       begin
 
-         if SGMacroButtons.Cells[0, i] <> ''
+         if SGMacroButtons.Cells[1, i] <> ''
          then
             begin
 
-               if (SGMacroButtons.Cells[1, i] = 'IR') or
-                  (SGMacroButtons.Cells[1, i] = 'RF')
+               if (SGMacroButtons.Cells[2, i] = 'IR') or
+                  (SGMacroButtons.Cells[2, i] = 'RF')
                then
                   begin
 
                      DMBroadlink.QGetCode.Close;
-                     DMBroadlink.QGetCode.ParamByName('DevName').AsString := SGMacroButtons.Cells[0, i];
-                     DMBroadlink.QGetCode.ParamByName('ButtName').AsString := SGMacroButtons.Cells[2, i];
+                     DMBroadlink.QGetCode.ParamByName('DevName').AsString := SGMacroButtons.Cells[1, i];
+                     DMBroadlink.QGetCode.ParamByName('ButtName').AsString := SGMacroButtons.Cells[3, i];
                      DMBroadlink.QGetCode.Open;
 
                      DMBroadlink.TMMMacroButton.Insert;
                      DMBroadlink.TMMMacroButton.FieldByName('MacroID').AsInteger := DMBroadlink.QGetMacroByName.FieldByName('ID').AsInteger;
                      DMBroadlink.TMMMacroButton.FieldByName('ButtonID').AsInteger := DMBroadlink.QGetCode.FieldByName('ID').AsInteger;
-                     DMBroadlink.TMMMacroButton.FieldByName('wait').AsInteger := StrToInt(SGMacroButtons.Cells[3, i]);
+                     DMBroadlink.TMMMacroButton.FieldByName('wait').AsInteger := StrToInt(SGMacroButtons.Cells[4, i]);
                      DMBroadlink.TMMMacroButton.FieldByName('seq').AsInteger := i;
-                     DMBroadlink.TMMMacroButton.FieldByName('Type').AsString := SGMacroButtons.Cells[1, i];
+                     DMBroadlink.TMMMacroButton.FieldByName('Type').AsString := SGMacroButtons.Cells[2, i];
                      DMBroadlink.TMMMacroButton.Post;
 
                   end
@@ -298,35 +308,35 @@ begin
                      begin
 
                         DMBroadlink.QGetBLButton.Close;
-                        DMBroadlink.QGetBLButton.ParamByName('DeviceName').AsString := SGMacroButtons.Cells[0, i];
-                        DMBroadlink.QGetBLButton.ParamByName('ButtName').AsString := SGMacroButtons.Cells[2, i];
+                        DMBroadlink.QGetBLButton.ParamByName('DeviceName').AsString := SGMacroButtons.Cells[1, i];
+                        DMBroadlink.QGetBLButton.ParamByName('ButtName').AsString := SGMacroButtons.Cells[3, i];
                         DMBroadlink.QGetBLButton.Open;
 
                         DMBroadlink.TMMMacroButton.Insert;
                         DMBroadlink.TMMMacroButton.FieldByName('MacroID').AsInteger := DMBroadlink.QGetMacroByName.FieldByName('ID').AsInteger;
                         DMBroadlink.TMMMacroButton.FieldByName('ButtonID').AsInteger := DMBroadlink.QGetBLButton.FieldByName('ID').AsInteger;
-                        DMBroadlink.TMMMacroButton.FieldByName('wait').AsInteger := StrToInt(SGMacroButtons.Cells[3, i]);
+                        DMBroadlink.TMMMacroButton.FieldByName('wait').AsInteger := StrToInt(SGMacroButtons.Cells[4, i]);
                         DMBroadlink.TMMMacroButton.FieldByName('seq').AsInteger := i;
-                        DMBroadlink.TMMMacroButton.FieldByName('Type').AsString := SGMacroButtons.Cells[1, i];
+                        DMBroadlink.TMMMacroButton.FieldByName('Type').AsString := SGMacroButtons.Cells[2, i];
                         DMBroadlink.TMMMacroButton.Post;
 
                      end;
 //                  else
-//                     if SGMacroButtons.Cells[1, i] = 'WiFi Switch'
+//                     if SGMacroButtons.Cells[2, i] = 'WiFi Switch'
 //                     then
 //                        begin
 //
 //                           DMBroadlink.QGetBLButton.Close;
-//                           DMBroadlink.QGetBLButton.ParamByName('DeviceName').AsString := SGMacroButtons.Cells[0, i];
-//                           DMBroadlink.QGetBLButton.ParamByName('ButtName').AsString := SGMacroButtons.Cells[2, i];
+//                           DMBroadlink.QGetBLButton.ParamByName('DeviceName').AsString := SGMacroButtons.Cells[1, i];
+//                           DMBroadlink.QGetBLButton.ParamByName('ButtName').AsString := SGMacroButtons.Cells[3, i];
 //                           DMBroadlink.QGetBLButton.Open;
 //
 //                           DMBroadlink.TMMMacroButton.Insert;
 //                           DMBroadlink.TMMMacroButton.FieldByName('MacroID').AsInteger := DMBroadlink.QGetMacroByName.FieldByName('ID').AsInteger;
 //                           DMBroadlink.TMMMacroButton.FieldByName('ButtonID').AsInteger := DMBroadlink.QGetBLButton.FieldByName('ID').AsInteger;
-//                           DMBroadlink.TMMMacroButton.FieldByName('wait').AsInteger := StrToInt(SGMacroButtons.Cells[3, i]);
+//                           DMBroadlink.TMMMacroButton.FieldByName('wait').AsInteger := StrToInt(SGMacroButtons.Cells[4, i]);
 //                           DMBroadlink.TMMMacroButton.FieldByName('seq').AsInteger := i;
-//                           DMBroadlink.TMMMacroButton.FieldByName('Type').AsString := SGMacroButtons.Cells[1, i];
+//                           DMBroadlink.TMMMacroButton.FieldByName('Type').AsString := SGMacroButtons.Cells[2, i];
 //                           DMBroadlink.TMMMacroButton.Post;
 //
 //                        end;
@@ -347,14 +357,14 @@ begin
    for i := 1 to SGMacroButtons.RowCount - 1 do
       begin
 
-         if (SGMacroButtons.Cells[1, i] = 'IR') or
-            (SGMacroButtons.Cells[1, i] = 'RF')
+         if (SGMacroButtons.Cells[2, i] = 'IR') or
+            (SGMacroButtons.Cells[2, i] = 'RF')
          then
             begin
 
                DMBroadlink.QGetCode.Close;
-               DMBroadlink.QGetCode.ParamByName('DevName').AsString := SGMacroButtons.Cells[0, i];
-               DMBroadlink.QGetCode.ParamByName('ButtName').AsString := SGMacroButtons.Cells[2, i];
+               DMBroadlink.QGetCode.ParamByName('DevName').AsString := SGMacroButtons.Cells[1, i];
+               DMBroadlink.QGetCode.ParamByName('ButtName').AsString := SGMacroButtons.Cells[3, i];
                DMBroadlink.QGetCode.Open;
 
                FileLines := TStringList.Create;
@@ -373,21 +383,21 @@ begin
 
                FileLines.DisposeOf;
 
-               Sleep(StrToInt(SGMacroButtons.Cells[3, i]));
+               Sleep(StrToInt(SGMacroButtons.Cells[4, i]));
 
             end
          else
-            if SGMacroButtons.Cells[1, i] = 'WiFi Bulb'
+            if SGMacroButtons.Cells[2, i] = 'WiFi Bulb'
             then
                begin
 
                   DMBroadlink.QGetBLButton.Close;
-                  DMBroadlink.QGetBLButton.ParamByName('DeviceName').AsString := SGMacroButtons.Cells[0, i];
-                  DMBroadlink.QGetBLButton.ParamByName('ButtName').AsString := SGMacroButtons.Cells[2, i];
+                  DMBroadlink.QGetBLButton.ParamByName('DeviceName').AsString := SGMacroButtons.Cells[1, i];
+                  DMBroadlink.QGetBLButton.ParamByName('ButtName').AsString := SGMacroButtons.Cells[3, i];
                   DMBroadlink.QGetBLButton.Open;
 
                   DMBroadlink.QGetBLDevByName.Close;
-                  DMBroadlink.QGetBLDevByName.ParamByName('Name').AsString := SGMacroButtons.Cells[0, i];
+                  DMBroadlink.QGetBLDevByName.ParamByName('Name').AsString := SGMacroButtons.Cells[1, i];
                   DMBroadlink.QGetBLDevByName.Open;
 
                   FileLines := TStringList.Create;
@@ -406,21 +416,21 @@ begin
 
                   FileLines.DisposeOf;
 
-                  Sleep(StrToInt(SGMacroButtons.Cells[2, i]));
+                  Sleep(StrToInt(SGMacroButtons.Cells[4, i]));
 
                end
             else
-               if SGMacroButtons.Cells[1, i] = 'WiFi Switch'
+               if SGMacroButtons.Cells[2, i] = 'WiFi Switch'
                then
                   begin
 
                      DMBroadlink.QGetBLButton.Close;
-                     DMBroadlink.QGetBLButton.ParamByName('DeviceName').AsString := SGMacroButtons.Cells[0, i];
-                     DMBroadlink.QGetBLButton.ParamByName('ButtName').AsString := SGMacroButtons.Cells[2, i];
+                     DMBroadlink.QGetBLButton.ParamByName('DeviceName').AsString := SGMacroButtons.Cells[1, i];
+                     DMBroadlink.QGetBLButton.ParamByName('ButtName').AsString := SGMacroButtons.Cells[3, i];
                      DMBroadlink.QGetBLButton.Open;
 
                      DMBroadlink.QGetBLDevByName.Close;
-                     DMBroadlink.QGetBLDevByName.ParamByName('Name').AsString := SGMacroButtons.Cells[0, i];
+                     DMBroadlink.QGetBLDevByName.ParamByName('Name').AsString := SGMacroButtons.Cells[1, i];
                      DMBroadlink.QGetBLDevByName.Open;
 
                      FileLines := TStringList.Create;
@@ -439,7 +449,7 @@ begin
 
                      FileLines.DisposeOf;
 
-                     Sleep(StrToInt(SGMacroButtons.Cells[2, i]));
+                     Sleep(StrToInt(SGMacroButtons.Cells[4, i]));
 
                   end;
 
@@ -456,10 +466,11 @@ end;
 procedure TFMacros.FormCreate(Sender: TObject);
 begin
 
-   SGMacroButtons.ColWidths[0] := (SGMacroButtons.Width - 185) div 3;
-   SGMacroButtons.ColWidths[1] := (SGMacroButtons.Width - 185) div 3;
-   SGMacroButtons.ColWidths[2] := (SGMacroButtons.Width - 185) div 3;
-   SGMacroButtons.ColWidths[3] := 125;
+   SGMacroButtons.ColWidths[0] := 20;
+   SGMacroButtons.ColWidths[1] := (SGMacroButtons.Width - 205) div 3;
+   SGMacroButtons.ColWidths[2] := (SGMacroButtons.Width - 205) div 3;
+   SGMacroButtons.ColWidths[3] := (SGMacroButtons.Width - 205) div 3;
+   SGMacroButtons.ColWidths[4] := 125;
 
 end;
 
