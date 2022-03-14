@@ -2,9 +2,10 @@ object FMacros: TFMacros
   Left = 0
   Top = 0
   BorderStyle = bsToolWindow
+  BorderWidth = 1
   Caption = 'Macros'
-  ClientHeight = 544
-  ClientWidth = 1097
+  ClientHeight = 500
+  ClientWidth = 1077
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,12 +20,12 @@ object FMacros: TFMacros
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 1097
+    Width = 1077
     Height = 30
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 1091
+    ExplicitWidth = 1071
     object Label1: TLabel
       Left = 0
       Top = 10
@@ -42,34 +43,33 @@ object FMacros: TFMacros
   end
   object Panel2: TPanel
     Left = 0
-    Top = 471
-    Width = 1097
+    Top = 427
+    Width = 1077
     Height = 73
     Align = alBottom
     BevelOuter = bvNone
-    TabOrder = 1
-    ExplicitTop = 457
-    ExplicitWidth = 1091
+    TabOrder = 3
+    ExplicitTop = 430
     object BNewMacro: TButton
-      Left = 598
+      Left = 593
       Top = 16
       Width = 90
       Height = 41
       Caption = 'Add Macro'
-      TabOrder = 0
+      TabOrder = 4
       OnClick = BNewMacroClick
     end
     object BAddMacroButton: TButton
-      Left = 692
+      Left = 687
       Top = 16
       Width = 90
       Height = 41
       Caption = 'Add Button'
-      TabOrder = 1
+      TabOrder = 5
       OnClick = BAddMacroButtonClick
     end
     object AEWait: TAdvEdit
-      Left = 976
+      Left = 944
       Top = 25
       Width = 115
       Height = 23
@@ -81,67 +81,63 @@ object FMacros: TFMacros
       FocusFontColor = 3881787
       LabelCaption = 'Wait (Milliseconds)'
       LabelPosition = lpTopLeft
+      LabelTransparent = True
       LabelFont.Charset = DEFAULT_CHARSET
       LabelFont.Color = clWindowText
       LabelFont.Height = -11
       LabelFont.Name = 'Segoe UI'
       LabelFont.Style = []
-      Lookup.Font.Charset = DEFAULT_CHARSET
-      Lookup.Font.Color = clWindowText
-      Lookup.Font.Height = -11
-      Lookup.Font.Name = 'Arial'
-      Lookup.Font.Style = []
       Lookup.Separator = ';'
       Color = clWindow
-      TabOrder = 2
+      TabOrder = 7
       Text = '0'
       Visible = True
       OnChange = AEWaitChange
-      Version = '4.0.1.3'
+      Version = '2.9.4.2'
     end
     object BSaveMacro: TButton
-      Left = 786
+      Left = 781
       Top = 16
       Width = 90
       Height = 41
       Caption = 'Save Macro'
-      TabOrder = 3
+      TabOrder = 6
       OnClick = BSaveMacroClick
     end
     object BClose: TButton
-      Left = 222
+      Left = 217
       Top = 16
       Width = 90
       Height = 41
       Caption = 'Close'
-      TabOrder = 4
+      TabOrder = 0
       OnClick = BCloseClick
     end
     object BDeleteMacro: TButton
-      Left = 410
+      Left = 405
       Top = 16
       Width = 90
       Height = 41
       Caption = 'Delete Macro'
-      TabOrder = 5
+      TabOrder = 2
       OnClick = BDeleteMacroClick
     end
     object BDeleteButton: TButton
-      Left = 504
+      Left = 499
       Top = 16
       Width = 90
       Height = 41
       Caption = 'Delete Button'
-      TabOrder = 6
+      TabOrder = 3
       OnClick = BDeleteButtonClick
     end
     object BTestMacro: TButton
-      Left = 316
+      Left = 311
       Top = 16
       Width = 90
       Height = 41
       Caption = 'Test Macro'
-      TabOrder = 7
+      TabOrder = 1
       OnClick = BTestMacroClick
     end
   end
@@ -149,45 +145,49 @@ object FMacros: TFMacros
     Left = 0
     Top = 30
     Width = 227
-    Height = 441
+    Height = 397
     Align = alLeft
     BevelOuter = bvNone
-    TabOrder = 2
-    ExplicitHeight = 427
+    TabOrder = 1
+    ExplicitHeight = 383
     object LBMacros: TListBox
       Left = 0
       Top = 0
       Width = 227
-      Height = 441
+      Height = 397
       Align = alClient
       BevelInner = bvNone
       BevelOuter = bvNone
       ItemHeight = 15
       TabOrder = 0
-      ExplicitHeight = 427
+      ExplicitHeight = 383
     end
   end
   object Panel4: TPanel
     Left = 227
     Top = 30
-    Width = 870
-    Height = 441
+    Width = 850
+    Height = 397
     Align = alClient
     BevelOuter = bvNone
-    TabOrder = 3
-    ExplicitWidth = 864
-    ExplicitHeight = 427
+    TabOrder = 2
+    ExplicitWidth = 844
+    ExplicitHeight = 383
     object SGMacroButtons: TAdvStringGrid
-      Left = 0
-      Top = 0
-      Width = 870
-      Height = 441
+      AlignWithMargins = True
+      Left = 3
+      Top = 3
+      Width = 844
+      Height = 391
+      Cursor = crDefault
       Hint = 'Drag and drop rows to alter sequence'
       Align = alClient
       BevelEdges = []
       BevelInner = bvNone
       BevelOuter = bvNone
-      ColCount = 3
+      BorderStyle = bsNone
+      Color = clWhite
+      ColCount = 4
       Ctl3D = True
       DefaultRowHeight = 24
       DefaultDrawing = True
@@ -199,7 +199,7 @@ object FMacros: TFMacros
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
-      Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRowMoving, goEditing, goRowSelect]
+      Options = [goVertLine, goHorzLine, goRowMoving, goEditing, goRowSelect]
       ParentCtl3D = False
       ParentFont = False
       ParentShowHint = False
@@ -208,6 +208,9 @@ object FMacros: TFMacros
       TabOrder = 0
       OnClick = SGMacroButtonsClick
       OnDragOver = SGMacroButtonsDragOver
+      GridLineColor = 15987699
+      GridFixedLineColor = 15987699
+      HoverRowCells = [hcNormal, hcSelected]
       OnOleDrop = SGMacroButtonsOleDrop
       OnOleDragOver = SGMacroButtonsOleDragOver
       DragDropSettings.OleDropTarget = True
@@ -222,6 +225,7 @@ object FMacros: TFMacros
       ActiveCellFont.Style = [fsBold]
       ColumnHeaders.Strings = (
         'Device Name'
+        'Device Type'
         'Button Name'
         'Wait Milliseconds')
       ColumnSize.Stretch = True
@@ -258,30 +262,15 @@ object FMacros: TFMacros
       FilterDropDown.Font.Height = -11
       FilterDropDown.Font.Name = 'Tahoma'
       FilterDropDown.Font.Style = []
-      FilterDropDown.TextChecked = 'Checked'
-      FilterDropDown.TextUnChecked = 'Unchecked'
       FilterDropDownClear = '(All)'
-      FilterEdit.TypeNames.Strings = (
-        'Starts with'
-        'Ends with'
-        'Contains'
-        'Not contains'
-        'Equal'
-        'Not equal'
-        'Larger than'
-        'Smaller than'
-        'Clear')
-      FixedColWidth = 644
+      FixedColWidth = 557
       FixedRowHeight = 24
       FixedFont.Charset = DEFAULT_CHARSET
-      FixedFont.Color = clWindowText
+      FixedFont.Color = clBlack
       FixedFont.Height = -11
       FixedFont.Name = 'Tahoma'
       FixedFont.Style = [fsBold]
       FloatFormat = '%.2f'
-      HoverButtons.Buttons = <>
-      HTMLSettings.ImageFolder = 'images'
-      HTMLSettings.ImageBaseName = 'img'
       Navigation.AllowInsertRow = True
       Navigation.AllowFmtClipboard = True
       Navigation.AllowClipboardAlways = True
@@ -321,15 +310,13 @@ object FMacros: TFMacros
       SearchFooter.HintFindPrev = 'Find previous occurrence'
       SearchFooter.HintHighlight = 'Highlight occurrences'
       SearchFooter.MatchCaseCaption = 'Match case'
-      SearchFooter.ResultFormat = '(%d of %d)'
-      SelectionTextColor = clWindowText
-      Version = '8.6.11.0'
+      Version = '6.2.1.1'
       WordWrap = False
-      ExplicitLeft = -4
       ColWidths = (
-        644
+        557
         202
-        20)
+        20
+        64)
       RowHeights = (
         24
         24)

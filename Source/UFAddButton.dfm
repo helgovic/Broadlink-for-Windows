@@ -2,9 +2,9 @@ object FAddButton: TFAddButton
   Left = 0
   Top = 0
   BorderStyle = bsToolWindow
-  Caption = 'Add Button'
-  ClientHeight = 484
-  ClientWidth = 600
+  BorderWidth = 1
+  ClientHeight = 501
+  ClientWidth = 618
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -12,7 +12,6 @@ object FAddButton: TFAddButton
   Font.Name = 'Segoe UI'
   Font.Style = []
   Position = poDesktopCenter
-  OnCloseQuery = FormCloseQuery
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 15
@@ -50,50 +49,59 @@ object FAddButton: TFAddButton
     TabOrder = 1
   end
   object BContinue: TButton
-    Left = 180
-    Top = 442
-    Width = 125
+    Left = 255
+    Top = 440
+    Width = 110
     Height = 49
     Caption = 'Continue'
     Enabled = False
-    TabOrder = 2
+    TabOrder = 5
     OnClick = BContinueClick
   end
   object MCode: TMemo
-    Left = 1
+    Left = 0
     Top = 270
     Width = 615
     Height = 150
     ReadOnly = True
-    TabOrder = 3
+    TabOrder = 2
   end
-  object BAddButtonOK: TButton
-    Left = 309
+  object BAddButtonSave: TButton
+    Left = 369
     Top = 440
-    Width = 125
+    Width = 110
     Height = 49
-    Caption = 'OK'
-    ModalResult = 1
-    TabOrder = 4
-    OnClick = BAddButtonOKClick
+    Caption = 'Save'
+    Enabled = False
+    TabOrder = 6
+    OnClick = BAddButtonSaveClick
   end
-  object BAddDeviceCancel: TButton
-    Left = 438
+  object BAddDeviceClose: TButton
+    Left = 483
     Top = 440
-    Width = 125
+    Width = 110
     Height = 49
-    Caption = 'Cancel'
-    ModalResult = 2
-    TabOrder = 5
-    OnClick = BAddDeviceCancelClick
+    Caption = 'Close'
+    TabOrder = 7
+    OnClick = BAddDeviceCloseClick
   end
   object BStart: TButton
-    Left = 53
+    Left = 141
     Top = 440
-    Width = 125
+    Width = 110
     Height = 49
     Caption = 'Start learning'
-    TabOrder = 6
+    TabOrder = 4
     OnClick = BStartClick
+  end
+  object BAddButtTest: TButton
+    Left = 27
+    Top = 440
+    Width = 110
+    Height = 49
+    Caption = 'Test'
+    Enabled = False
+    TabOrder = 3
+    OnClick = BAddButtTestClick
   end
 end

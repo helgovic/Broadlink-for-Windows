@@ -2,9 +2,10 @@ object FNewMacro: TFNewMacro
   Left = 0
   Top = 0
   BorderStyle = bsToolWindow
+  BorderWidth = 1
   Caption = 'New Macro'
-  ClientHeight = 128
-  ClientWidth = 513
+  ClientHeight = 126
+  ClientWidth = 511
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -13,6 +14,7 @@ object FNewMacro: TFNewMacro
   Font.Style = []
   Position = poDesktopCenter
   OnCloseQuery = FormCloseQuery
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 15
   object LEMacroName: TLabeledEdit

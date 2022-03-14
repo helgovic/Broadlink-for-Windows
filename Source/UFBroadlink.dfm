@@ -2,9 +2,10 @@ object FBroadlink: TFBroadlink
   Left = 0
   Top = 0
   BorderStyle = bsToolWindow
-  Caption = 'Broadlink'
-  ClientHeight = 427
-  ClientWidth = 1098
+  BorderWidth = 1
+  Caption = 'Broadlink for Windows'
+  ClientHeight = 547
+  ClientWidth = 1232
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -15,27 +16,32 @@ object FBroadlink: TFBroadlink
   Position = poDesktopCenter
   Visible = True
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 15
   object Panel1: TPanel
     Left = 0
     Top = 33
-    Width = 350
-    Height = 269
+    Width = 600
+    Height = 389
     Align = alLeft
     BevelOuter = bvNone
-    TabOrder = 0
-    ExplicitHeight = 255
+    TabOrder = 2
+    ExplicitHeight = 375
     object SGDevice: TAdvStringGrid
-      Left = 0
-      Top = 0
-      Width = 350
-      Height = 269
+      AlignWithMargins = True
+      Left = 10
+      Top = 3
+      Width = 587
+      Height = 383
+      Cursor = crDefault
+      Margins.Left = 10
       Align = alClient
       BevelEdges = []
       BevelInner = bvNone
       BevelOuter = bvNone
-      ColCount = 2
+      BorderStyle = bsNone
+      Color = clWhite
       Ctl3D = True
       DefaultRowHeight = 24
       DefaultDrawing = True
@@ -47,12 +53,15 @@ object FBroadlink: TFBroadlink
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
-      Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRowSelect]
+      Options = [goVertLine, goHorzLine, goRowSelect, goFixedRowDefAlign]
       ParentCtl3D = False
       ParentFont = False
       ScrollBars = ssVertical
       TabOrder = 0
       OnClick = SGDeviceClick
+      GridLineColor = 15987699
+      GridFixedLineColor = 15987699
+      HoverRowCells = [hcNormal, hcSelected]
       ActiveCellFont.Charset = DEFAULT_CHARSET
       ActiveCellFont.Color = clWindowText
       ActiveCellFont.Height = -11
@@ -60,7 +69,10 @@ object FBroadlink: TFBroadlink
       ActiveCellFont.Style = [fsBold]
       ColumnHeaders.Strings = (
         'Name'
-        'Type')
+        'Manufacturer'
+        'Model'
+        'Type'
+        'Share')
       ColumnSize.Stretch = True
       ColumnSize.StretchColumn = 0
       ControlLook.FixedGradientHoverFrom = clGray
@@ -93,30 +105,15 @@ object FBroadlink: TFBroadlink
       FilterDropDown.Font.Height = -11
       FilterDropDown.Font.Name = 'Tahoma'
       FilterDropDown.Font.Style = []
-      FilterDropDown.TextChecked = 'Checked'
-      FilterDropDown.TextUnChecked = 'Unchecked'
       FilterDropDownClear = '(All)'
-      FilterEdit.TypeNames.Strings = (
-        'Starts with'
-        'Ends with'
-        'Contains'
-        'Not contains'
-        'Equal'
-        'Not equal'
-        'Larger than'
-        'Smaller than'
-        'Clear')
-      FixedColWidth = 326
+      FixedColWidth = 374
       FixedRowHeight = 24
       FixedFont.Charset = DEFAULT_CHARSET
-      FixedFont.Color = clWindowText
+      FixedFont.Color = clBlack
       FixedFont.Height = -11
       FixedFont.Name = 'Tahoma'
       FixedFont.Style = [fsBold]
       FloatFormat = '%.2f'
-      HoverButtons.Buttons = <>
-      HTMLSettings.ImageFolder = 'images'
-      HTMLSettings.ImageBaseName = 'img'
       PrintSettings.DateFormat = 'dd/mm/yyyy'
       PrintSettings.Font.Charset = DEFAULT_CHARSET
       PrintSettings.Font.Color = clWindowText
@@ -152,13 +149,16 @@ object FBroadlink: TFBroadlink
       SearchFooter.HintFindPrev = 'Find previous occurrence'
       SearchFooter.HintHighlight = 'Highlight occurrences'
       SearchFooter.MatchCaseCaption = 'Match case'
-      SearchFooter.ResultFormat = '(%d of %d)'
-      SelectionTextColor = clWindowText
-      Version = '8.6.11.0'
+      ShowDesignHelper = False
+      Version = '6.2.1.1'
       WordWrap = False
+      ExplicitHeight = 369
       ColWidths = (
-        326
-        20)
+        374
+        20
+        64
+        64
+        64)
       RowHeights = (
         24
         24)
@@ -166,20 +166,20 @@ object FBroadlink: TFBroadlink
   end
   object Panel2: TPanel
     Left = 0
-    Top = 302
-    Width = 1098
+    Top = 422
+    Width = 1232
     Height = 125
     Align = alBottom
     BevelOuter = bvNone
-    TabOrder = 1
-    ExplicitTop = 288
-    ExplicitWidth = 1092
+    TabOrder = 4
+    ExplicitTop = 408
+    ExplicitWidth = 1226
     object Label3: TLabel
       Left = 351
       Top = 10
-      Width = 88
+      Width = 94
       Height = 15
-      Caption = 'Broadlink Device'
+      Caption = 'Broadlink Remote'
     end
     object INewDB: TImage
       Left = 322
@@ -225,32 +225,28 @@ object FBroadlink: TFBroadlink
       Height = 23
       BorderColor = 11250603
       EmptyTextStyle = []
+      Flat = False
       FlatLineColor = 11250603
       FocusColor = clWindow
       FocusFontColor = 3881787
       LabelCaption = 'Database File'
       LabelPosition = lpTopLeft
+      LabelTransparent = True
       LabelFont.Charset = DEFAULT_CHARSET
       LabelFont.Color = clWindowText
       LabelFont.Height = -11
       LabelFont.Name = 'Segoe UI'
       LabelFont.Style = []
-      Lookup.Font.Charset = DEFAULT_CHARSET
-      Lookup.Font.Color = clWindowText
-      Lookup.Font.Height = -11
-      Lookup.Font.Name = 'Arial'
-      Lookup.Font.Style = []
       Lookup.Separator = ';'
       Color = clWindow
-      ShortCut = 0
+      ReadOnly = False
       TabOrder = 0
-      Text = 'D:\Kodi\Broadlink\Broadlink.db'
+      Text = ''
       Visible = True
       OnChange = AFEDBChange
-      Version = '1.7.1.1'
+      Version = '1.3.3.4'
       ButtonStyle = bsButton
       ButtonWidth = 18
-      Flat = False
       Etched = False
       Glyph.Data = {
         36030000424D3603000000000000360000002800000010000000100000000100
@@ -279,13 +275,6 @@ object FBroadlink: TFBroadlink
         ECC9AFFEDECCFFE4D4FFE6D6FFE8D1FFEACBFFEDC7FFEFC4FFF4C0FFF5BCFEF0
         B0ECD996D1B893E6D9CCFFFFFFFFFFFFEAE0D6D5BDA6D1B297D5B397D9B797DC
         BB98DDBD96DABC92D5B88DD1B591D4BEA4E9DFD5FFFFFFFFFFFF}
-      ReadOnly = False
-      ButtonColor = clWhite
-      ButtonColorHot = 15917525
-      ButtonColorDown = 14925219
-      ButtonTextColor = 4474440
-      ButtonTextColorHot = 2303013
-      ButtonTextColorDown = 2303013
       DefaultExt = 'db'
       FilterIndex = 0
       DialogOptions = [ofFileMustExist]
@@ -300,8 +289,8 @@ object FBroadlink: TFBroadlink
       TabOrder = 1
     end
     object BAddDevice: TButton
-      Left = 212
-      Top = 68
+      Left = 109
+      Top = 70
       Width = 109
       Height = 41
       Caption = 'Add device'
@@ -309,8 +298,8 @@ object FBroadlink: TFBroadlink
       OnClick = BAddDeviceClick
     end
     object BAddButton: TButton
-      Left = 325
-      Top = 68
+      Left = 222
+      Top = 70
       Width = 109
       Height = 41
       Caption = 'Add Button'
@@ -318,8 +307,8 @@ object FBroadlink: TFBroadlink
       OnClick = BAddButtonClick
     end
     object BDelDevice: TButton
-      Left = 438
-      Top = 68
+      Left = 335
+      Top = 70
       Width = 109
       Height = 41
       Caption = 'Delete Device'
@@ -327,8 +316,8 @@ object FBroadlink: TFBroadlink
       OnClick = BDelDeviceClick
     end
     object BDelButton: TButton
-      Left = 551
-      Top = 68
+      Left = 448
+      Top = 70
       Width = 109
       Height = 41
       Caption = 'Delete Button'
@@ -336,42 +325,69 @@ object FBroadlink: TFBroadlink
       OnClick = BDelButtonClick
     end
     object BSendComm: TButton
-      Left = 664
-      Top = 68
+      Left = 787
+      Top = 70
       Width = 109
       Height = 41
       Caption = 'Send Command'
-      TabOrder = 6
+      TabOrder = 8
       OnClick = BSendCommClick
     end
     object BMacros: TButton
-      Left = 777
-      Top = 68
+      Left = 900
+      Top = 70
       Width = 109
       Height = 41
       Caption = 'Macros'
-      TabOrder = 7
+      TabOrder = 9
       OnClick = BMacrosClick
+    end
+    object BEditDevice: TButton
+      Left = 561
+      Top = 70
+      Width = 109
+      Height = 41
+      Caption = 'Edit Device'
+      TabOrder = 6
+      OnClick = BEditDeviceClick
+    end
+    object BEditButton: TButton
+      Left = 674
+      Top = 70
+      Width = 109
+      Height = 41
+      Caption = 'Edit Button'
+      TabOrder = 7
+      OnClick = BEditButtonClick
+    end
+    object BTimers: TButton
+      Left = 1013
+      Top = 70
+      Width = 109
+      Height = 41
+      Caption = 'Timers'
+      TabOrder = 10
+      OnClick = BTimersClick
     end
   end
   object Panel3: TPanel
     Left = 0
     Top = 0
-    Width = 1098
+    Width = 1232
     Height = 33
     Align = alTop
     BevelOuter = bvNone
-    TabOrder = 2
-    ExplicitWidth = 1092
+    TabOrder = 1
+    ExplicitWidth = 1226
     object Label1: TLabel
-      Left = 0
-      Top = 10
+      Left = 10
+      Top = 15
       Width = 40
       Height = 15
       Caption = 'Devices'
     end
     object Label2: TLabel
-      Left = 350
+      Left = 603
       Top = 12
       Width = 41
       Height = 15
@@ -379,24 +395,28 @@ object FBroadlink: TFBroadlink
     end
   end
   object Panel4: TPanel
-    Left = 350
+    Left = 600
     Top = 33
-    Width = 748
-    Height = 269
+    Width = 632
+    Height = 389
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 3
-    ExplicitWidth = 742
-    ExplicitHeight = 255
+    ExplicitWidth = 626
+    ExplicitHeight = 375
     object SGButtons: TAdvStringGrid
-      Left = 0
-      Top = 0
-      Width = 748
-      Height = 269
+      AlignWithMargins = True
+      Left = 3
+      Top = 3
+      Width = 626
+      Height = 383
+      Cursor = crDefault
       Align = alClient
       BevelEdges = []
       BevelInner = bvNone
       BevelOuter = bvNone
+      BorderStyle = bsNone
+      Color = clWhite
       ColCount = 2
       Ctl3D = True
       DefaultRowHeight = 24
@@ -409,11 +429,14 @@ object FBroadlink: TFBroadlink
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
-      Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRowSelect]
+      Options = [goVertLine, goHorzLine, goRowSelect]
       ParentCtl3D = False
       ParentFont = False
       ScrollBars = ssVertical
       TabOrder = 0
+      GridLineColor = 15987699
+      GridFixedLineColor = 15987699
+      HoverRowCells = [hcNormal, hcSelected]
       ActiveCellFont.Charset = DEFAULT_CHARSET
       ActiveCellFont.Color = clWindowText
       ActiveCellFont.Height = -11
@@ -454,30 +477,15 @@ object FBroadlink: TFBroadlink
       FilterDropDown.Font.Height = -11
       FilterDropDown.Font.Name = 'Tahoma'
       FilterDropDown.Font.Style = []
-      FilterDropDown.TextChecked = 'Checked'
-      FilterDropDown.TextUnChecked = 'Unchecked'
       FilterDropDownClear = '(All)'
-      FilterEdit.TypeNames.Strings = (
-        'Starts with'
-        'Ends with'
-        'Contains'
-        'Not contains'
-        'Equal'
-        'Not equal'
-        'Larger than'
-        'Smaller than'
-        'Clear')
       FixedColWidth = 644
       FixedRowHeight = 24
       FixedFont.Charset = DEFAULT_CHARSET
-      FixedFont.Color = clWindowText
+      FixedFont.Color = clBlack
       FixedFont.Height = -11
       FixedFont.Name = 'Tahoma'
       FixedFont.Style = [fsBold]
       FloatFormat = '%.2f'
-      HoverButtons.Buttons = <>
-      HTMLSettings.ImageFolder = 'images'
-      HTMLSettings.ImageBaseName = 'img'
       PrintSettings.DateFormat = 'dd/mm/yyyy'
       PrintSettings.Font.Charset = DEFAULT_CHARSET
       PrintSettings.Font.Color = clWindowText
@@ -513,295 +521,26 @@ object FBroadlink: TFBroadlink
       SearchFooter.HintFindPrev = 'Find previous occurrence'
       SearchFooter.HintHighlight = 'Highlight occurrences'
       SearchFooter.MatchCaseCaption = 'Match case'
-      SearchFooter.ResultFormat = '(%d of %d)'
-      SelectionTextColor = clWindowText
-      Version = '8.6.11.0'
+      ShowDesignHelper = False
+      Version = '6.2.1.1'
       WordWrap = False
-      ExplicitTop = 4
-      ExplicitHeight = 289
+      ExplicitWidth = 620
+      ExplicitHeight = 369
       ColWidths = (
         644
-        100)
+        42)
       RowHeights = (
         24
         24)
     end
   end
-  object FDCBL: TFDConnection
-    Params.Strings = (
-      'DriverID=SQLite'
-      'Database=D:\Kodi\Broadlink\BroadLink.db')
-    LoginPrompt = False
-    Left = 301
-    Top = 45
-  end
-  object TDevice: TFDTable
-    IndexFieldNames = 'ID'
-    Connection = FDCBL
-    TableName = 'Device'
-    Left = 557
-    Top = 161
-  end
-  object QGetCode: TFDQuery
-    Connection = FDCBL
-    SQL.Strings = (
-      'select b.Code, b.ID'
-      '  from Buttons b, Device d'
-      ' where d.Name = :DevName and'
-      '       b.DeviceID = d.ID and'
-      '       b.Name = :ButtName')
-    Left = 429
-    Top = 103
-    ParamData = <
-      item
-        Name = 'DEVNAME'
-        ParamType = ptInput
-      end
-      item
-        Name = 'BUTTNAME'
-        ParamType = ptInput
-      end>
-  end
-  object TButtons: TFDTable
-    Connection = FDCBL
-    TableName = 'Buttons'
-    Left = 429
-    Top = 161
-  end
-  object QGetDeviceID: TFDQuery
-    Connection = FDCBL
-    SQL.Strings = (
-      'Select Max(ID) + 1 as NewID'
-      'from Device')
-    Left = 685
-    Top = 103
-  end
-  object QGetButtons: TFDQuery
-    Connection = FDCBL
-    SQL.Strings = (
-      'Select b.ID, b.Name, b.Code, b.DeviceID'
-      '  from Buttons b, Device d'
-      ' where  d.Name = :DevName and'
-      '             b.DeviceID = d.ID'
-      ' order by b.Name')
-    Left = 301
-    Top = 103
-    ParamData = <
-      item
-        Name = 'DEVNAME'
-        ParamType = ptInput
-      end>
-  end
-  object QGetButtonID: TFDQuery
-    Connection = FDCBL
-    SQL.Strings = (
-      'Select Max(ID) + 1 as NewID'
-      'from Buttons')
-    Left = 173
-    Top = 103
-  end
-  object TBLDevice: TFDTable
-    Connection = FDCBL
-    TableName = 'BLDevice'
-    Left = 301
-    Top = 161
-  end
-  object QGetBLDevByName: TFDQuery
-    Connection = FDCBL
-    SQL.Strings = (
-      'Select DevStr'
-      '  from BLDevice'
-      ' where Name = :Name')
-    Left = 45
-    Top = 103
-    ParamData = <
-      item
-        Name = 'NAME'
-        ParamType = ptInput
-      end>
-  end
-  object TMacros: TFDTable
-    Connection = FDCBL
-    TableName = 'Macros'
-    Left = 685
-    Top = 161
-  end
-  object TMMMacroButton: TFDTable
-    Connection = FDCBL
-    TableName = 'MMMacroButton'
-    Left = 813
-    Top = 161
-  end
-  object QGetMacroID: TFDQuery
-    Connection = FDCBL
-    SQL.Strings = (
-      'Select Max(ID) + 1 as NewID'
-      'from Macros')
-    Left = 173
-    Top = 161
-  end
-  object QGetMacroButtons: TFDQuery
-    Connection = FDCBL
-    SQL.Strings = (
-      
-        'Select b.ID, b.Name as ButtonName, b.Code, b.DeviceID, d.Name as' +
-        ' DeviceName, mm.wait, mm.seq'
-      '  from Buttons b, MMMacroButton mm, Macros m, Device d'
-      ' where  m.Name = :MacroName and'
-      '        mm.MacroID = m.ID and'
-      '        mm.ButtonID = b.ID and'
-      '        d.ID = b.DeviceID'
-      ' order by mm.seq')
-    Left = 813
-    Top = 103
-    ParamData = <
-      item
-        Name = 'MACRONAME'
-        ParamType = ptInput
-      end>
-  end
-  object QGetMacroByName: TFDQuery
-    Connection = FDCBL
-    SQL.Strings = (
-      'Select ID'
-      'from Macros'
-      'where Name = :Name')
-    Left = 45
-    Top = 161
-    ParamData = <
-      item
-        Name = 'NAME'
-        ParamType = ptInput
-      end>
-  end
-  object QDelMacroButtons: TFDQuery
-    Connection = FDCBL
-    SQL.Strings = (
-      'delete'
-      '  from MMMacroButton'
-      ' where MacroID = (select ID'
-      '                    from Macros'
-      '                   where Name = :MacroName)'
-      '')
-    Left = 813
-    Top = 45
-    ParamData = <
-      item
-        Name = 'MACRONAME'
-        ParamType = ptInput
-      end>
-  end
-  object QDelMacroButton: TFDQuery
-    Connection = FDCBL
-    SQL.Strings = (
-      'delete'
-      '  from MMMacroButtons'
-      ' where MacroID =:MacID and'
-      '            BttonID = : ButtID'
-      '')
-    Left = 685
-    Top = 45
-    ParamData = <
-      item
-        Name = 'MACID'
-        ParamType = ptInput
-      end>
-  end
-  object QCreateDB: TFDQuery
-    Connection = FDCBL
-    SQL.Strings = (
-      'BEGIN TRANSACTION;'
-      ''
-      '-- Table: BLDevice'
-      
-        'CREATE TABLE BLDevice (DevStr STRING PRIMARY KEY NOT NULL UNIQUE' +
-        ', Name STRING NOT NULL);'
-      ''
-      '-- Table: Buttons'
-      
-        'CREATE TABLE Buttons (ID BIGINT PRIMARY KEY NOT NULL, Name STRIN' +
-        'G NOT NULL, DeviceID BIGINT NOT NULL REFERENCES Device (ID) ON D' +
-        'ELETE CASCADE, Code STRING);'
-      ''
-      '-- Table: Device'
-      
-        'CREATE TABLE Device (ID BIGINT PRIMARY KEY NOT NULL, Name STRING' +
-        ' NOT NULL, IR BOOLEAN NOT NULL);'
-      ''
-      '-- Table: Macros'
-      
-        'CREATE TABLE Macros (Name STRING NOT NULL UNIQUE, ID BIGINT PRIM' +
-        'ARY KEY UNIQUE NOT NULL);'
-      ''
-      '-- Table: MMMacroButton'
-      
-        'CREATE TABLE MMMacroButton (MacroID BIGINT NOT NULL, ButtonID BI' +
-        'GINT NOT NULL, wait BIGINT NOT NULL DEFAULT (0), seq INTEGER NOT' +
-        ' NULL);'
-      ''
-      '-- Index: DevNameIdx'
-      'CREATE UNIQUE INDEX DevNameIdx ON Device (Name ASC);'
-      ''
-      '-- Index: MacroButtonIdx'
-      
-        'CREATE INDEX MacroButtonIdx ON MMMacroButton (MacroID, ButtonID)' +
-        ';'
-      ''
-      '-- Index: MacroNameIdx'
-      'CREATE INDEX MacroNameIdx ON Macros (Name);'
-      ''
-      '-- Index: NameIdx'
-      'CREATE UNIQUE INDEX NameIdx ON Buttons (Name, DeviceID);'
-      ''
-      'COMMIT TRANSACTION;')
-    Left = 429
-    Top = 45
-  end
-  object QGetDeviceByName: TFDQuery
-    Connection = FDCBL
-    SQL.Strings = (
-      'Select ID'
-      '  from Device'
-      ' where Name = :Name')
-    Left = 557
-    Top = 103
-    ParamData = <
-      item
-        Name = 'NAME'
-        ParamType = ptInput
-      end>
-  end
-  object QDellButton: TFDQuery
-    Connection = FDCBL
-    SQL.Strings = (
-      'delete'
-      '  from Buttons b'
-      ' where b.ID = (select b2.ID'
-      '                 from Buttons b2,'
-      '                      Device d'
-      '                where d.Name = :DevName and'
-      '                      b2.DeviceID = d.ID and'
-      '                      b2.Name = :ButtName)'
-      '')
-    Left = 557
-    Top = 45
-    ParamData = <
-      item
-        Name = 'DEVNAME'
-        ParamType = ptInput
-      end
-      item
-        Name = 'BUTTNAME'
-        ParamType = ptInput
-      end>
-  end
   object AdvMainMenu1: TAdvMainMenu
     MenuStyler = AdvMenuOfficeStyler1
-    Version = '2.7.1.8'
-    Left = 45
-    Top = 45
+    Version = '2.5.4.0'
+    Left = 75
+    Top = 75
     object Settings: TMenuItem
-      Caption = 'Settings'
+      Caption = 'File'
       object RunOnWinStartMI: TMenuItem
         AutoCheck = True
         Caption = 'Run on Windows start'
@@ -812,12 +551,25 @@ object FBroadlink: TFBroadlink
         Visible = False
         OnClick = SetUpBLMIClick
       end
+      object ShowInstructionsMI: TMenuItem
+        Caption = 'Show Instructions'
+        OnClick = ShowInstructionsMIClick
+      end
+      object ShareDevices: TMenuItem
+        Caption = 'Share Devices'
+        Hint = 'Upload devices to shared database'
+        OnClick = ShareDevicesClick
+      end
+      object MILocations: TMenuItem
+        Caption = 'Locations'
+        OnClick = MILocationsClick
+      end
     end
   end
   object AdvMenuOfficeStyler1: TAdvMenuOfficeStyler
     AntiAlias = aaNone
     AutoThemeAdapt = False
-    Style = osOffice2019Black
+    Style = osOffice2003Blue
     Background.Position = bpCenter
     Background.Color = 3881787
     Background.ColorTo = 3881787
@@ -918,7 +670,43 @@ object FBroadlink: TFBroadlink
     NotesFont.Style = []
     UseSystemFont = False
     MenuBorderColor = 11382963
-    Left = 173
-    Top = 45
+    Left = 278
+    Top = 75
+  end
+  object RESTClient1: TRESTClient
+    Accept = 'application/json, text/plain; q=0.9, text/html;q=0.8,'
+    AcceptCharset = 'utf-8, *;q=0.8'
+    BaseURL = 'https://api.sunrise-sunset.org/json'
+    Params = <>
+    Left = 481
+    Top = 75
+  end
+  object RESTRequest1: TRESTRequest
+    Client = RESTClient1
+    Params = <
+      item
+        Name = 'lat'
+        Value = '55.73165'
+      end
+      item
+        Name = 'lng'
+        Value = '12.36328'
+      end
+      item
+        Name = 'date'
+        Value = '2022-03-14'
+      end
+      item
+        Name = 'formatted'
+        Value = '0'
+      end>
+    Response = RESTResponse1
+    Left = 684
+    Top = 75
+  end
+  object RESTResponse1: TRESTResponse
+    ContentType = 'application/json'
+    Left = 887
+    Top = 75
   end
 end

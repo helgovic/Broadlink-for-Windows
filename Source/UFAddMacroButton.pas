@@ -4,9 +4,14 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, AdvEdit;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, AdvEdit, FireDAC.Stan.Param;
 
 type
+
+  TDevObj = class
+     DevType: String;
+  end;
+
   TFAddMacroButton = class(TForm)
     Panel1: TPanel;
     Panel3: TPanel;
@@ -36,7 +41,7 @@ var
 implementation
 
 uses
-   UFBroadlink, UFMacros;
+   UFBroadlink, UFMacros, UDMBroadlink;
 
 {$R *.dfm}
 
@@ -48,8 +53,9 @@ begin
       FMacros.SGMacroButtons.RowCount := FMacros.SGMacroButtons.RowCount + 1;
 
    FMacros.SGMacroButtons.Cells[0, FMacros.SGMacroButtons.RowCount - 1] := LBAMBDevices.Items[LBAMBDevices.ItemIndex];
-   FMacros.SGMacroButtons.Cells[1, FMacros.SGMacroButtons.RowCount - 1] := LBAMBButtons.Items[LBAMBButtons.ItemIndex];
-   FMacros.SGMacroButtons.Cells[2, FMacros.SGMacroButtons.RowCount - 1] := '0';
+   FMacros.SGMacroButtons.Cells[1, FMacros.SGMacroButtons.RowCount - 1] := TDevObj(LBAMBDevices.Items.Objects[LBAMBDevices.ItemIndex]).DevType;
+   FMacros.SGMacroButtons.Cells[2, FMacros.SGMacroButtons.RowCount - 1] := LBAMBButtons.Items[LBAMBButtons.ItemIndex];
+   FMacros.SGMacroButtons.Cells[3, FMacros.SGMacroButtons.RowCount - 1] := '0';
 
 end;
 
@@ -73,36 +79,72 @@ begin
 
    LBAMBButtons.Clear;
 
-   FBroadlink.QGetButtons.Close;
-   FBroadlink.QGetButtons.ParamByName('DevName').AsString := LBAMBDevices.Items[LBAMBDevices.ItemIndex];
-   FBroadlink.QGetButtons.Open;
-
-   while not FBroadlink.QGetButtons.Eof do
+   if (TDevObj(LBAMBDevices.Items.Objects[LBAMBDevices.ItemIndex]).DevType = 'IR') or
+      (TDevObj(LBAMBDevices.Items.Objects[LBAMBDevices.ItemIndex]).DevType = 'RF')
+   then
       begin
 
-         LBAMBButtons.Items.Add(FBroadlink.QGetButtons.FieldByName('Name').AsString);
+         DMBroadlink.QGetButtons.Close;
+         DMBroadlink.QGetButtons.ParamByName('DevName').AsString := LBAMBDevices.Items[LBAMBDevices.ItemIndex];
+         DMBroadlink.QGetButtons.Open;
 
-         FBroadlink.QGetButtons.Next;
+         while not DMBroadlink.QGetButtons.Eof do
+            begin
 
-      end;
+               LBAMBButtons.Items.Add(DMBroadlink.QGetButtons.FieldByName('Name').AsString);
 
-   LBAMBButtons.ItemIndex := 0;
+               DMBroadlink.QGetButtons.Next;
+
+            end;
+
+      end
+   else
+      if TDevObj(LBAMBDevices.Items.Objects[LBAMBDevices.ItemIndex]).DevType = 'WiFi Bulb'
+      then
+         begin
+
+            DMBroadlink.QGetBLButtons.Close;
+            DMBroadlink.QGetBLButtons.ParamByName('DevName').AsString := LBAMBDevices.Items[LBAMBDevices.ItemIndex];
+            DMBroadlink.QGetBLButtons.Open;
+
+            while not DMBroadlink.QGetBLButtons.Eof do
+               begin
+
+                  LBAMBButtons.Items.Add(DMBroadlink.QGetBLButtons.FieldByName('Name').AsString);
+
+                  DMBroadlink.QGetBLButtons.Next;
+
+               end;
+
+         end;
+
+   if LBAMBButtons.Items.Count > 0
+   then
+      LBAMBButtons.ItemIndex := 0;
 
 end;
 
 procedure TFAddMacroButton.LoadDevices;
-begin
 
-   FBroadlink.TDevice.First;
+var
+   DType: TDevObj;
+
+begin
 
    LBAMBDevices.Clear;
 
-   while not FBroadlink.TDevice.Eof do
+   DMBroadlink.QGetDevices.Close;
+   DMBroadlink.QGetDevices.Open;
+
+   while not DMBroadlink.QGetDevices.Eof do
       begin
 
-         LBAMBDevices.Items.Add (FBroadlink.TDevice.FieldByName('Name').AsString);
+         DType := TDevObj.Create;
+         DType.DevType := DMBroadlink.QGetDevices.FieldByName('Type').AsString;
 
-         FBroadlink.TDevice.Next;
+         LBAMBDevices.AddItem(DMBroadlink.QGetDevices.FieldByName('DeviceName').AsString, DType);
+
+         DMBroadlink.QGetDevices.Next;
 
       end;
 

@@ -8,22 +8,31 @@ uses
 
 type
   TFBLDevName = class(TForm)
-    Label1: TLabel;
-    EBLDevice: TEdit;
     BBLDevOK: TButton;
     LEBLDevName: TLabeledEdit;
+    LEBLMacAdr: TLabeledEdit;
+    LEBLType: TLabeledEdit;
+    LEBLModel: TLabeledEdit;
+    LEBLHexType: TLabeledEdit;
+    LEBLIPAdr: TLabeledEdit;
+    LEBLManufacturer: TLabeledEdit;
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure BBLDevOKClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
   public
     { Public declarations }
+     State: string;
   end;
 
 var
   FBLDevName: TFBLDevName;
 
 implementation
+
+uses
+   UDMBroadlink, UFBroadlink;
 
 {$R *.dfm}
 
@@ -45,6 +54,32 @@ procedure TFBLDevName.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
 
    CanClose := CloseAllowed;
+
+end;
+
+procedure TFBLDevName.FormShow(Sender: TObject);
+begin
+
+   if State = 'Edit'
+   then
+      begin
+
+         DMBroadlink.QGetBLDevByName.Close;
+         DMBroadlink.QGetBLDevByName.ParamByName('Name').AsString := FBroadlink.SGDevice.Cells[0, FBroadlink.SGDevice.Row];
+         DMBroadlink.QGetBLDevByName.Open;
+
+         LEBLManufacturer.Text := DMBroadlink.QGetBLDevByName.FieldByName('Manufacturer').AsString;
+         LEBLModel.Text :=  DMBroadlink.QGetBLDevByName.FieldByName('Model').AsString;
+         LEBLHexType.Text :=  DMBroadlink.QGetBLDevByName.FieldByName('HexType').AsString;
+         LEBLIPAdr.Text :=  DMBroadlink.QGetBLDevByName.FieldByName('IP').AsString;
+         LEBLMacAdr.Text :=  DMBroadlink.QGetBLDevByName.FieldByName('Mac').AsString;
+         LEBLType.Text := DMBroadlink.QGetBLDevByName.FieldByName('Type').AsString;
+
+      end
+   else
+      LEBLDevName.Text := '';
+
+   LEBLDevName.SetFocus;
 
 end;
 

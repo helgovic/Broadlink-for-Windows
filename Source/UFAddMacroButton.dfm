@@ -2,9 +2,10 @@ object FAddMacroButton: TFAddMacroButton
   Left = 0
   Top = 0
   BorderStyle = bsToolWindow
+  BorderWidth = 1
   Caption = 'Add Macro Button'
-  ClientHeight = 441
-  ClientWidth = 719
+  ClientHeight = 383
+  ClientWidth = 693
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,32 +20,33 @@ object FAddMacroButton: TFAddMacroButton
     Left = 0
     Top = 33
     Width = 350
-    Height = 331
+    Height = 273
     Align = alLeft
     BevelOuter = bvNone
-    TabOrder = 0
-    ExplicitHeight = 317
+    TabOrder = 1
+    ExplicitHeight = 259
     object LBAMBDevices: TListBox
       Left = 0
       Top = 0
       Width = 350
-      Height = 331
+      Height = 273
       Align = alClient
+      Columns = 2
       ItemHeight = 15
       TabOrder = 0
       OnClick = LBAMBDevicesClick
-      ExplicitHeight = 317
+      ExplicitHeight = 259
     end
   end
   object Panel3: TPanel
     Left = 0
     Top = 0
-    Width = 719
+    Width = 693
     Height = 33
     Align = alTop
     BevelOuter = bvNone
-    TabOrder = 1
-    ExplicitWidth = 713
+    TabOrder = 0
+    ExplicitWidth = 687
     object Label1: TLabel
       Left = 0
       Top = 10
@@ -63,37 +65,37 @@ object FAddMacroButton: TFAddMacroButton
   object Panel4: TPanel
     Left = 350
     Top = 33
-    Width = 369
-    Height = 331
+    Width = 343
+    Height = 273
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitWidth = 363
-    ExplicitHeight = 317
+    ExplicitWidth = 337
+    ExplicitHeight = 259
     object LBAMBButtons: TListBox
       Left = 0
       Top = 0
-      Width = 369
-      Height = 331
+      Width = 343
+      Height = 273
       Align = alClient
       ItemHeight = 15
       TabOrder = 0
-      ExplicitWidth = 363
-      ExplicitHeight = 317
+      ExplicitWidth = 337
+      ExplicitHeight = 259
     end
   end
   object Panel2: TPanel
     Left = 0
-    Top = 364
-    Width = 719
+    Top = 306
+    Width = 693
     Height = 77
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 3
-    ExplicitTop = 350
-    ExplicitWidth = 713
+    ExplicitTop = 292
+    ExplicitWidth = 687
     object BAddMacroButton: TButton
-      Left = 249
+      Left = 235
       Top = 18
       Width = 109
       Height = 41
@@ -102,7 +104,7 @@ object FAddMacroButton: TFAddMacroButton
       OnClick = BAddMacroButtonClick
     end
     object BAddMacroButtonClose: TButton
-      Left = 364
+      Left = 350
       Top = 18
       Width = 109
       Height = 41
