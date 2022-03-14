@@ -1,7 +1,12 @@
 # Broadlink-for-Windows
 Windows app for Broadlink WiFi remotes
 
-With this app you can control a Broadlink WiFi universal remote. Add devices and buttons. Create macros. 
+With this app you can control Broadlink WiFi devices.
+
+   Manage IR and RF devices and buttons.
+   Create macros that executes commands from any device.
+   Create timers (Repeat every x days/hours/minutes/seconds, Every day x hours/minutes before/after sunrise/sunset)
+   
 Teach IR and RF codes. Send codes or macros from app or use the command line interface. Data is stored in SQLite database.
 
 The app uses [python-broadlink](https://github.com/mjg59/python-broadlink), so python has to be installed. Download from [here](https://www.python.org/downloads/).
