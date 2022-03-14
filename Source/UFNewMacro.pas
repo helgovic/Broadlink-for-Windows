@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Mask, Vcl.ExtCtrls;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Mask, Vcl.ExtCtrls, FireDAC.Stan.Param, Data.DB;
 
 type
   TFNewMacro = class(TForm)
@@ -14,6 +14,7 @@ type
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure BNewMacroOKClick(Sender: TObject);
     procedure BNewMacroCancelClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
   public
@@ -26,7 +27,7 @@ var
 implementation
 
 uses
-   UFBroadlink;
+   UFBroadlink, UDMBroadlink;
 
 {$R *.dfm}
 
@@ -52,14 +53,14 @@ begin
          Exit;
       end;
 
-   FBroadlink.QGetMacroByName.Close;
-   FBroadlink.QGetMacroByName.ParamByName('Name').AsString := Trim(LEMacroName.Text);
-   FBroadlink.QGetMacroByName.Open;
+   DMBroadlink.QGetMacroByName.Close;
+   DMBroadlink.QGetMacroByName.ParamByName('Name').AsString := Trim(LEMacroName.Text);
+   DMBroadlink.QGetMacroByName.Open;
 
-   if not FBroadlink.QGetMacroByName.IsEmpty
+   if not DMBroadlink.QGetMacroByName.IsEmpty
    then
       begin
-         ShowMessage('Macro ' + Trim(LEMacroName.Text) + ' allready exists');
+         ShowMessage('Macro ' + Trim(LEMacroName.Text) + ' already exists');
          LEMacroName.SetFocus;
          CloseAllowed := False;
       end;
@@ -73,4 +74,12 @@ begin
 
 end;
 
+procedure TFNewMacro.FormShow(Sender: TObject);
+begin
+   LEMacroName.Text := '';
+   LEMacroName.SetFocus;
+end;
+
 end.
+
+

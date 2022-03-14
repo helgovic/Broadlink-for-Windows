@@ -3,7 +3,7 @@ object FSetUpBL: TFSetUpBL
   Top = 0
   BorderStyle = bsToolWindow
   Caption = 'Setup Broadlink Device'
-  ClientHeight = 649
+  ClientHeight = 654
   ClientWidth = 490
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -20,7 +20,7 @@ object FSetUpBL: TFSetUpBL
     Left = 5
     Top = 10
     Width = 482
-    Height = 251
+    Height = 273
     Margins.Left = 5
     Margins.Top = 10
     Align = alTop
@@ -35,11 +35,11 @@ object FSetUpBL: TFSetUpBL
       'col.'#13#10#13#10'3. Click SetUp.'#13#10#13#10'4. Reconnect to your WiFi network.'#13#10#13 +
       #10'5. Click Discover.'
     WordWrap = True
-    ExplicitWidth = 488
+    ExplicitWidth = 458
   end
   object LESSid: TLabeledEdit
-    Left = 5
-    Top = 292
+    Left = 3
+    Top = 332
     Width = 480
     Height = 23
     EditLabel.Width = 166
@@ -49,8 +49,8 @@ object FSetUpBL: TFSetUpBL
     Text = ''
   end
   object AENetwPW: TAdvEdit
-    Left = 5
-    Top = 348
+    Left = 3
+    Top = 385
     Width = 480
     Height = 23
     EditType = etPassword
@@ -60,16 +60,12 @@ object FSetUpBL: TFSetUpBL
     FocusFontColor = 3881787
     LabelCaption = 'Enter your network password'
     LabelPosition = lpTopLeft
+    LabelTransparent = True
     LabelFont.Charset = DEFAULT_CHARSET
     LabelFont.Color = clWindowText
     LabelFont.Height = -11
     LabelFont.Name = 'Segoe UI'
     LabelFont.Style = []
-    Lookup.Font.Charset = DEFAULT_CHARSET
-    Lookup.Font.Color = clWindowText
-    Lookup.Font.Height = -11
-    Lookup.Font.Name = 'Arial'
-    Lookup.Font.Style = []
     Lookup.Separator = ';'
     CanUndo = False
     Color = clWindow
@@ -77,44 +73,43 @@ object FSetUpBL: TFSetUpBL
     TabOrder = 1
     Text = ''
     Visible = True
-    Version = '4.0.1.3'
+    Version = '2.9.4.2'
   end
   object BSetUp: TButton
-    Left = 54
-    Top = 574
+    Left = 60
+    Top = 619
     Width = 125
     Height = 55
     Caption = 'SetUp'
-    TabOrder = 2
+    TabOrder = 4
     OnClick = BSetUpClick
   end
   object BSetUpBLCancel: TButton
-    Left = 183
-    Top = 574
+    Left = 189
+    Top = 619
     Width = 125
     Height = 55
     Caption = 'Close'
-    TabOrder = 3
+    TabOrder = 5
     OnClick = BSetUpBLCloseClick
   end
   object MOutPut: TMemo
-    Left = 5
-    Top = 428
+    Left = 3
+    Top = 467
     Width = 480
     Height = 129
     ReadOnly = True
-    TabOrder = 4
+    TabOrder = 3
   end
   object ACBSec: TAdvComboBox
     Left = 5
-    Top = 399
+    Top = 438
     Width = 480
     Height = 23
     Color = clWindow
-    Version = '2.0.0.2'
+    Version = '1.4.1.0'
     Visible = True
     ButtonWidth = 17
-    EmptyTextStyle = []
     DropWidth = 0
     Enabled = True
     ItemIndex = 3
@@ -126,17 +121,18 @@ object FSetUpBL: TFSetUpBL
       'WPA1/2')
     LabelCaption = 'Security protocol'
     LabelPosition = lpTopLeft
+    LabelTransparent = True
     LabelFont.Charset = DEFAULT_CHARSET
     LabelFont.Color = clWindowText
     LabelFont.Height = -11
     LabelFont.Name = 'Segoe UI'
     LabelFont.Style = []
-    TabOrder = 5
+    TabOrder = 2
     Text = 'WPA2'
   end
   object BDiscover: TButton
-    Left = 312
-    Top = 574
+    Left = 318
+    Top = 619
     Width = 125
     Height = 55
     Caption = 'Discover'

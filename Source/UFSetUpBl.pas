@@ -34,7 +34,7 @@ var
 implementation
 
 uses
-   UFBroadlink, JCLSysUtils, JCLStrings, UFBLDev;
+   UFBroadlink, JCLSysUtils, JCLStrings, UFBLDev, UDMBroadlink;
 
 {$R *.dfm}
 
@@ -42,70 +42,70 @@ var
    CurrOperation: String;
 
 procedure TFSetUpBL.ExecOut(const Text: string);
-
-var
-   OutLines: TStringList;
-   i: integer;
-
+//
+//var
+//   OutLines: TStringList;
+//   i: integer;
+//
 begin
 
-   if CurrOperation = 'Discovery'
-   then
-      begin
-
-         MOutPut.Text :=  MOutPut.Text + Text;
-         SendMessage(MOutPut.Handle, WM_VSCROLL, SB_BOTTOM, 0);
-
-         OutLines := TStringList.Create;
-         OutLines.Text := Text;
-
-         for i := 0 to OutLines.Count - 1 do
-            begin
-
-               if Pos('Device : ', OutLines[i]) > 0
-               then
-                  begin
-
-                     if not FBroadlink.TBLDevice.FindKey([StrAfter('Device : ', OutLines[i])])
-                     then
-                        begin
-
-                           if not Assigned(FBLDevName)
-                           then
-                              FBLDevName := TFBLDevName.Create(nil);
-
-                           FBLDevName.EBLDevice.Text := StrAfter('Device : ', OutLines[i]);
-                           FBLDevName.ShowModal;
-
-                           FBroadlink.TBLDevice.Insert;
-                           FBroadlink.TBLDevice.FieldByName('DevStr').AsString := StrAfter('Device : ', OutLines[i]);
-                           FBroadlink.TBLDevice.FieldByName('Name').AsString := FBLDevName.LEBLDevName.Text;
-                           FBroadlink.TBLDevice.Post;
-
-                        end;
-
-                     FBroadlink.CBDevice.Items.Add(FBroadlink.TBLDevice.FieldByName('Name').AsString + ' : ' + StrAfter('Device : ', OutLines[i]));
-
-                  end;
-
-            end;
-
-         if FBroadlink.CBDevice.Items.Count > 0
-         then
-            FBroadlink.CBDevice.ItemIndex := 0;
-
-         OutLines.DisposeOf;
-
-         Exit;
-
-      end;
-
-   if CurrOperation = 'JoinWiFi'
-   then
-      begin
-         MOutPut.Text :=  MOutPut.Text + Text;
-         SendMessage(MOutPut.Handle, WM_VSCROLL, SB_BOTTOM, 0);
-      end;
+//   if CurrOperation = 'Discovery'
+//   then
+//      begin
+//
+//         MOutPut.Text :=  MOutPut.Text + Text;
+//         SendMessage(MOutPut.Handle, WM_VSCROLL, SB_BOTTOM, 0);
+//
+//         OutLines := TStringList.Create;
+//         OutLines.Text := Text;
+//
+//         for i := 0 to OutLines.Count - 1 do
+//            begin
+//
+//               if Pos('Device : ', OutLines[i]) > 0
+//               then
+//                  begin
+//
+//                     if not DMBroadlink.TBLDevice.FindKey([StrAfter('Device : ', OutLines[i])])
+//                     then
+//                        begin
+//
+//                           if not Assigned(FBLDevName)
+//                           then
+//                              FBLDevName := TFBLDevName.Create(nil);
+//
+//                           FBLDevName.EBLDevice.Text := StrAfter('Device : ', OutLines[i]);
+//                           FBLDevName.ShowModal;
+//
+//                           DMBroadlink.TBLDevice.Insert;
+//                           DMBroadlink.TBLDevice.FieldByName('DevStr').AsString := StrAfter('Device : ', OutLines[i]);
+//                           DMBroadlink.TBLDevice.FieldByName('Name').AsString := FBLDevName.LEBLDevName.Text;
+//                           DMBroadlink.TBLDevice.Post;
+//
+//                        end;
+//
+//                     FBroadlink.CBDevice.Items.Add(DMBroadlink.TBLDevice.FieldByName('Name').AsString + ' : ' + StrAfter('Device : ', OutLines[i]));
+//
+//                  end;
+//
+//            end;
+//
+//         if FBroadlink.CBDevice.Items.Count > 0
+//         then
+//            FBroadlink.CBDevice.ItemIndex := 0;
+//
+//         OutLines.DisposeOf;
+//
+//         Exit;
+//
+//      end;
+//
+//   if CurrOperation = 'JoinWiFi'
+//   then
+//      begin
+//         MOutPut.Text :=  MOutPut.Text + Text;
+//         SendMessage(MOutPut.Handle, WM_VSCROLL, SB_BOTTOM, 0);
+//      end;
 
 end;
 
@@ -180,3 +180,4 @@ begin
 end;
 
 end.
+
