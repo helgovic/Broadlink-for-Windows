@@ -19,7 +19,7 @@ TICK = 32.84
 TIMEOUT = 30
 IR_TOKEN = 0x26
 
-hwnd = win32gui.FindWindow('TFAddButton', 'Add Button')
+hwnd = win32gui.FindWindow('TFAddButton', '')
 
 def auto_int(x):
     return int(x, 0)
@@ -100,6 +100,8 @@ parser.add_argument("--durations", action="store_true",
                     help="use durations in micro seconds instead of the Broadlink format")
 parser.add_argument("--convert", action="store_true", help="convert input data to durations")
 parser.add_argument("--joinwifi", nargs=2, help="Args are SSID PASSPHRASE to configure Broadlink device with")
+parser.add_argument("--getlightstate", action="store_true", help="Get light bulb state")
+parser.add_argument("--setlightstate", action="store_true", help="Set light bulb state")
 parser.add_argument("data", nargs='*', help="Data to send or convert")
 args = parser.parse_args()
 
@@ -231,7 +233,7 @@ if args.rfscanlearn:
 
     print("You can now let go of the button")
 
-    while not os.path.exists("D:\Kodi\Broadlink\waitfile"):
+    while not os.path.exists("waitfile"):
         time.sleep(1)
 
     print("To complete learning, single press the button you want to learn")
@@ -251,7 +253,7 @@ if args.rfscanlearn:
         copy_data(hwnd, 'LearnStatus;No data received...')
         print("No data received...")
         exit(1)
-
+        0
     copy_data(hwnd, 'LearnStatus;Found RF Frequency - 2 of 2!')
     print("Found RF Frequency - 2 of 2!")
     learned = format_durations(to_microseconds(bytearray(data))) \
@@ -263,3 +265,8 @@ if args.rfscanlearn:
         print("Saving to {}".format(args.learnfile))
         with open(args.learnfile, "w") as text_file:
             text_file.write(learned)
+if args.getlightstate:
+    state = dev.get_state() 
+    print("State : {}".format(state))
+if args.setlightstate:
+    dev.set_state(args.setlightstate)
