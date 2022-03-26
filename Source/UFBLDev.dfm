@@ -4,8 +4,8 @@ object FBLDevName: TFBLDevName
   BorderStyle = bsToolWindow
   BorderWidth = 1
   Caption = 'Broadlink device'
-  ClientHeight = 425
-  ClientWidth = 412
+  ClientHeight = 447
+  ClientWidth = 436
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -13,20 +13,9 @@ object FBLDevName: TFBLDevName
   Font.Name = 'Segoe UI'
   Font.Style = []
   Position = poDesktopCenter
-  OnCloseQuery = FormCloseQuery
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 15
-  object BBLDevOK: TButton
-    Left = 145
-    Top = 400
-    Width = 141
-    Height = 41
-    Caption = 'OK'
-    ModalResult = 1
-    TabOrder = 7
-    OnClick = BBLDevOKClick
-  end
   object LEBLDevName: TLabeledEdit
     Left = 6
     Top = 356
@@ -109,5 +98,34 @@ object FBLDevName: TFBLDevName
     ReadOnly = True
     TabOrder = 0
     Text = ''
+  end
+  object Panel1: TPanel
+    Left = 0
+    Top = 387
+    Width = 436
+    Height = 60
+    Align = alBottom
+    BevelOuter = bvNone
+    TabOrder = 7
+    ExplicitTop = 373
+    ExplicitWidth = 430
+    object BBLDevOK: TButton
+      Left = 75
+      Top = 10
+      Width = 141
+      Height = 41
+      Caption = 'OK'
+      TabOrder = 0
+      OnClick = BBLDevOKClick
+    end
+    object BSkipDev: TButton
+      Left = 220
+      Top = 10
+      Width = 141
+      Height = 41
+      Caption = 'Cancel'
+      TabOrder = 1
+      OnClick = BSkipDevClick
+    end
   end
 end

@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, AdvEdit, Vcl.Mask,
-  Vcl.ExtCtrls, AdvCombo;
+  Vcl.ExtCtrls, AdvCombo, Vcl.Imaging.pngimage;
 
 type
   TFSetUpBL = class(TForm)
@@ -17,10 +17,12 @@ type
     MOutPut: TMemo;
     ACBSec: TAdvComboBox;
     BDiscover: TButton;
+    IViewPassword: TImage;
     procedure BSetUpClick(Sender: TObject);
     procedure BSetUpBLCloseClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure BDiscoverClick(Sender: TObject);
+    procedure IViewPasswordClick(Sender: TObject);
   private
     procedure ExecOut(const Text: string);
     { Private declarations }
@@ -115,6 +117,17 @@ begin
    MOutPut.Text := '';
    LESSid.Text := '';
    AENetwPW.Text := '';
+
+end;
+
+procedure TFSetUpBL.IViewPasswordClick(Sender: TObject);
+begin
+
+   if AENetwPW.EditType = etPassword
+   then
+      AENetwPW.EditType := etString
+   else
+      AENetwPW.EditType := etPassword;
 
 end;
 

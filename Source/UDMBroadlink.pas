@@ -69,6 +69,8 @@ type
     QGetLocRestr: TFDQuery;
     QGetMacroRestr: TFDQuery;
     QGetLocation: TFDQuery;
+    QGetDueTimers: TFDQuery;
+    QGetBLRemotes: TFDQuery;
     procedure DataModuleCreate(Sender: TObject);
     procedure UCCommonDBConnectionLost(Sender: TObject; Component: TComponent;
       ConnLostCause: TConnLostCause; var RetryMode: TRetryMode);

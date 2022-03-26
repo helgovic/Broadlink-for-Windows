@@ -4,11 +4,10 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Mask, Vcl.ExtCtrls, Vcl.StdCtrls;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Mask, Vcl.ExtCtrls, Vcl.StdCtrls, FireDAC.Stan.Param;
 
 type
   TFBLDevName = class(TForm)
-    BBLDevOK: TButton;
     LEBLDevName: TLabeledEdit;
     LEBLMacAdr: TLabeledEdit;
     LEBLType: TLabeledEdit;
@@ -16,9 +15,12 @@ type
     LEBLHexType: TLabeledEdit;
     LEBLIPAdr: TLabeledEdit;
     LEBLManufacturer: TLabeledEdit;
-    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+    Panel1: TPanel;
+    BBLDevOK: TButton;
+    BSkipDev: TButton;
     procedure BBLDevOKClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure BSkipDevClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -36,25 +38,24 @@ uses
 
 {$R *.dfm}
 
-var
-   CloseAllowed: Boolean = True;
-
 procedure TFBLDevName.BBLDevOKClick(Sender: TObject);
 begin
 
    if Trim(LEBLDevName.Text) = ''
    then
-      CloseAllowed := False
-   else
-      CloseAllowed := True;
+      begin
+         ShowMessage('Please enter a name for this device');
+         LEBLDevName.SetFocus;
+         Exit;
+      end;
+
+   ModalResult := mrOk;
 
 end;
 
-procedure TFBLDevName.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+procedure TFBLDevName.BSkipDevClick(Sender: TObject);
 begin
-
-   CanClose := CloseAllowed;
-
+   ModalResult := mrCancel;
 end;
 
 procedure TFBLDevName.FormShow(Sender: TObject);
@@ -74,6 +75,7 @@ begin
          LEBLIPAdr.Text :=  DMBroadlink.QGetBLDevByName.FieldByName('IP').AsString;
          LEBLMacAdr.Text :=  DMBroadlink.QGetBLDevByName.FieldByName('Mac').AsString;
          LEBLType.Text := DMBroadlink.QGetBLDevByName.FieldByName('Type').AsString;
+         LEBLDevName.Text := FBroadlink.SGDevice.Cells[0, FBroadlink.SGDevice.Row];
 
       end
    else

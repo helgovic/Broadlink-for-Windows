@@ -4,8 +4,8 @@ object FMacros: TFMacros
   BorderStyle = bsToolWindow
   BorderWidth = 1
   Caption = 'Macros'
-  ClientHeight = 500
-  ClientWidth = 1077
+  ClientHeight = 458
+  ClientWidth = 1059
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,12 +20,11 @@ object FMacros: TFMacros
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 1077
+    Width = 1059
     Height = 30
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 1071
     object Label1: TLabel
       Left = 0
       Top = 10
@@ -43,14 +42,12 @@ object FMacros: TFMacros
   end
   object Panel2: TPanel
     Left = 0
-    Top = 427
-    Width = 1077
+    Top = 385
+    Width = 1059
     Height = 73
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 3
-    ExplicitTop = 413
-    ExplicitWidth = 1071
     object BNewMacro: TButton
       Left = 593
       Top = 16
@@ -146,41 +143,37 @@ object FMacros: TFMacros
     Left = 0
     Top = 30
     Width = 227
-    Height = 397
+    Height = 355
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitHeight = 383
     object LBMacros: TListBox
       Left = 0
       Top = 0
       Width = 227
-      Height = 397
+      Height = 369
       Align = alClient
       BevelInner = bvNone
       BevelOuter = bvNone
       ItemHeight = 15
       TabOrder = 0
       OnClick = LBMacrosClick
-      ExplicitHeight = 383
     end
   end
   object Panel4: TPanel
     Left = 227
     Top = 30
-    Width = 850
-    Height = 397
+    Width = 832
+    Height = 355
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitWidth = 844
-    ExplicitHeight = 383
     object SGMacroButtons: TAdvStringGrid
       AlignWithMargins = True
       Left = 3
       Top = 3
-      Width = 844
-      Height = 391
+      Width = 832
+      Height = 363
       Cursor = crDefault
       Hint = 'Drag and drop rows to alter sequence'
       Align = alClient
@@ -314,10 +307,11 @@ object FMacros: TFMacros
       SearchFooter.MatchCaseCaption = 'Match case'
       Version = '6.2.1.1'
       WordWrap = False
-      ExplicitLeft = 6
+      ExplicitWidth = 826
+      ExplicitHeight = 349
       ColWidths = (
         20
-        675
+        663
         20
         64
         64)

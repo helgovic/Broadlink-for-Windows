@@ -22,7 +22,7 @@ object DMBroadlink: TDMBroadlink
       'Select ID'
       '  from Manufacturers'
       ' where UPPER(Name) = UPPER(:Name)')
-    Left = 481
+    Left = 887
     Top = 365
     ParamData = <
       item
@@ -202,7 +202,7 @@ object DMBroadlink: TDMBroadlink
     SQL.Strings = (
       'Select Max(ID) + 1 as NewID'
       'from Buttons')
-    Left = 278
+    Left = 481
     Top = 191
   end
   object QGetButtons: TFDQuery
@@ -221,7 +221,7 @@ object DMBroadlink: TDMBroadlink
       '  Upper(Dev.Name) = Upper(:DevName)'
       'Order By'
       '  But.Name')
-    Left = 481
+    Left = 684
     Top = 191
     ParamData = <
       item
@@ -243,7 +243,7 @@ object DMBroadlink: TDMBroadlink
       '  b.DeviceID = d.ID And'
       '  (Upper(d.Name) = Upper(:DevName) And'
       '  Upper(b.Name) = Upper(:ButtName))')
-    Left = 684
+    Left = 887
     Top = 191
     ParamData = <
       item
@@ -260,7 +260,7 @@ object DMBroadlink: TDMBroadlink
     SQL.Strings = (
       'Select Max(ID) + 1 as NewID'
       'from Macros')
-    Left = 75
+    Left = 481
     Top = 365
   end
   object QGetMacroByName: TFDQuery
@@ -269,8 +269,8 @@ object DMBroadlink: TDMBroadlink
       'Select ID'
       'from Macros'
       'where Name = :Name')
-    Left = 887
-    Top = 307
+    Left = 278
+    Top = 365
     ParamData = <
       item
         Name = 'NAME'
@@ -280,30 +280,51 @@ object DMBroadlink: TDMBroadlink
   object QGetMacroButtons: TFDQuery
     Connection = FDCBL
     SQL.Strings = (
-      
-        '  Select b.ID, b.Name as ButtonName, b.Code, d.Name as DeviceNam' +
-        'e, mm.wait, mm.seq, mm.Type'
-      '    from Buttons b, MMMacroButton mm, Macros m, Device d'
-      '   where  UPPER(m.Name) =  UPPER(:MacroName) and'
-      '          ((mm.Type = '#39'IR'#39') or'
-      '           (mm.Type = '#39'RF'#39')) and'
-      '          mm.MacroID = m.ID and'
-      '          mm.ButtonID = b.ID and'
-      '          d.ID = b.DeviceID'
+      'Select'
+      '  b.ID,'
+      '  b.Name As ButtonName,'
+      '  b.Code,'
+      '  d.Name As DeviceName,'
+      '  mm.wait,'
+      '  mm.seq,'
+      '  mm.Type'
+      'From'
+      '  Buttons b,'
+      '  MMMacroButton mm,'
+      '  Macros m,'
+      '  Device d'
+      'Where'
+      '  mm.MacroID = m.ID And'
+      '  mm.ButtonID = b.ID And'
+      '  d.ID = b.DeviceID And'
+      '  (((mm.Type = '#39'IR'#39') Or'
+      '    (mm.Type = '#39'RF'#39')) And'
+      '  UPPER(m.Name) = UPPER(:MacroName))'
       'union'
-      
-        '  Select b.ID, b.Name as ButtonName, b.Command as Code, d.Name a' +
-        's DeviceName, mm.wait, mm.seq, mm.Type'
-      '    from BLButtons b, MMMacroButton mm, Macros m, BLDevice d'
-      '   where  UPPER(m.Name) =  UPPER(:MacroName) and'
-      '          mm.Type <> '#39'IR'#39' and'
-      '          mm.Type <> '#39'RF'#39' and'
-      '          mm.MacroID = m.ID and'
-      '          mm.ButtonID = b.ID and'
-      '          d.Mac = b.DeviceMac'
-      ' order by seq')
-    Left = 684
-    Top = 307
+      'Select'
+      '  b.ID,'
+      '  b.Name As ButtonName,'
+      '  b.Command As Code,'
+      '  d.Name As DeviceName,'
+      '  mm.wait,'
+      '  mm.seq,'
+      '  mm.Type'
+      'From'
+      '  BLButtons b,'
+      '  MMMacroButton mm,'
+      '  Macros m,'
+      '  BLDevice d'
+      'Where'
+      '  mm.MacroID = m.ID And'
+      '  mm.ButtonID = b.ID And'
+      '  d.Mac = b.DeviceMac And'
+      '  UPPER(m.Name) = UPPER(:MacroName) And'
+      '  (mm.Type <> '#39'IR'#39' And'
+      '  mm.Type <> '#39'RF'#39')'
+      'Order By'
+      '  seq')
+    Left = 75
+    Top = 365
     ParamData = <
       item
         Name = 'MACRONAME'
@@ -315,7 +336,7 @@ object DMBroadlink: TDMBroadlink
     SQL.Strings = (
       'Select Max(ID) + 1 as NewID'
       'from Device')
-    Left = 481
+    Left = 684
     Top = 249
   end
   object QGetDeviceByName: TFDQuery
@@ -324,7 +345,7 @@ object DMBroadlink: TDMBroadlink
       'Select ID'
       '  from Device'
       ' where Name = :Name')
-    Left = 278
+    Left = 481
     Top = 249
     ParamData = <
       item
@@ -341,8 +362,8 @@ object DMBroadlink: TDMBroadlink
       ' where UPPER(d.ModelName) = UPPER(:ModelName) and'
       '       UPPER(m.Name) = UPPER(:ManufacturerName) and'
       '       d.ManufacturerID = m.ID')
-    Left = 887
-    Top = 191
+    Left = 75
+    Top = 249
     ParamData = <
       item
         Name = 'MODELNAME'
@@ -358,45 +379,45 @@ object DMBroadlink: TDMBroadlink
     SQL.Strings = (
       'Select Max(ID) + 1 as NewID'
       'from Manufacturers')
-    Left = 684
-    Top = 365
+    Left = 75
+    Top = 423
   end
   object TBLDevice: TFDTable
     Connection = FDCBL
     TableName = 'BLDevice'
-    Left = 887
-    Top = 423
+    Left = 278
+    Top = 481
   end
   object TButtons: TFDTable
     Connection = FDCBL
     TableName = 'Buttons'
-    Left = 75
+    Left = 481
     Top = 481
   end
   object TDevice: TFDTable
     IndexFieldNames = 'ID'
     Connection = FDCBL
     TableName = 'Device'
-    Left = 278
+    Left = 684
     Top = 481
   end
   object TMacros: TFDTable
     Connection = FDCBL
     TableName = 'Macros'
-    Left = 684
-    Top = 481
+    Left = 75
+    Top = 539
   end
   object TManufacturers: TFDTable
     IndexFieldNames = 'ID'
     Connection = FDCBL
     TableName = 'Manufacturers'
-    Left = 887
-    Top = 481
+    Left = 278
+    Top = 539
   end
   object TMMMacroButton: TFDTable
     Connection = FDCBL
     TableName = 'MMMacroButton'
-    Left = 75
+    Left = 481
     Top = 539
   end
   object UCCommonDB: TUniConnection
@@ -411,7 +432,7 @@ object DMBroadlink: TDMBroadlink
     Server = 'sql697.main-hosting.eu'
     LoginPrompt = False
     OnConnectionLost = UCCommonDBConnectionLost
-    Left = 481
+    Left = 887
     Top = 539
     EncryptedPassword = 'B7FF9AFF95FF90FFCBFFCFFFC8FFC8FF'
   end
@@ -424,8 +445,8 @@ object DMBroadlink: TDMBroadlink
       ' where UPPER(m.Name) = UPPER(:ManufacturerName) and'
       '       UPPER(d.ModelName) = UPPER(:ModelName) and'
       '       m.ID = d.ManufacturerID ')
-    Left = 684
-    Top = 539
+    Left = 75
+    Top = 597
     ParamData = <
       item
         DataType = ftUnknown
@@ -449,8 +470,8 @@ object DMBroadlink: TDMBroadlink
       '       UPPER(d.ModelName) = UPPER(:ModelName) and'
       '       b.DeviceID = d.ID and'
       '       m.ID = d.ManufacturerID ')
-    Left = 887
-    Top = 539
+    Left = 278
+    Top = 597
     ParamData = <
       item
         DataType = ftUnknown
@@ -469,7 +490,7 @@ object DMBroadlink: TDMBroadlink
       'select ID'
       '  from Manufacturer'
       ' where UPPER(Name) = UPPER(:ManufacturerName)')
-    Left = 278
+    Left = 684
     Top = 655
     ParamData = <
       item
@@ -486,7 +507,7 @@ object DMBroadlink: TDMBroadlink
       '       Manufacturer m'
       ' where UPPER(m.Name) = UPPER(:ManufacturerName) and'
       '       m.ID = d.ManufacturerID ')
-    Left = 481
+    Left = 887
     Top = 655
     ParamData = <
       item
@@ -499,21 +520,21 @@ object DMBroadlink: TDMBroadlink
     TableName = 'Buttons'
     Connection = UCCommonDB
     Options.SetFieldsReadOnly = False
-    Left = 684
-    Top = 655
+    Left = 75
+    Top = 713
   end
   object TCommonDevice: TUniTable
     TableName = 'Device'
     Connection = UCCommonDB
     Options.SetFieldsReadOnly = False
-    Left = 887
-    Top = 655
+    Left = 278
+    Top = 713
   end
   object TCommonManufacturers: TUniTable
     TableName = 'Manufacturer'
     Connection = UCCommonDB
     Options.SetFieldsReadOnly = False
-    Left = 75
+    Left = 481
     Top = 713
   end
   object QCommonGetManufacturerID: TUniQuery
@@ -521,7 +542,7 @@ object DMBroadlink: TDMBroadlink
     SQL.Strings = (
       'Select Max(ID) + 1 as NewID'
       'from Manufacturer')
-    Left = 278
+    Left = 684
     Top = 597
   end
   object QGetManufacturerModels: TFDQuery
@@ -532,8 +553,8 @@ object DMBroadlink: TDMBroadlink
       '       Manufacturers m'
       ' where UPPER(m.Name) = UPPER(:ManufacturerName) and'
       '       d.ManufacturerID = m.ID')
-    Left = 887
-    Top = 365
+    Left = 278
+    Top = 423
     ParamData = <
       item
         Name = 'MANUFACTURERNAME'
@@ -545,7 +566,7 @@ object DMBroadlink: TDMBroadlink
     SQL.Strings = (
       'Select Max(ID) + 1 as NewID'
       'from Device')
-    Left = 75
+    Left = 481
     Top = 597
   end
   object QGetDeviceButtons: TFDQuery
@@ -556,7 +577,7 @@ object DMBroadlink: TDMBroadlink
       ' where  d.ID = :DeviceID and'
       '             b.DeviceID = d.ID'
       ' order by b.Name')
-    Left = 75
+    Left = 278
     Top = 249
     ParamData = <
       item
@@ -569,8 +590,8 @@ object DMBroadlink: TDMBroadlink
     SQL.Strings = (
       'Select Max(ID) + 1 as NewID'
       'from Buttons')
-    Left = 887
-    Top = 597
+    Left = 278
+    Top = 655
   end
   object QGetCommonDeviceButton: TUniQuery
     Connection = UCCommonDB
@@ -581,7 +602,7 @@ object DMBroadlink: TDMBroadlink
       ' where d.ID = :DeviceID and'
       '       UPPER(b.Name) = UPPER(:ButtonName) and'
       '       b.DeviceID = d.ID ')
-    Left = 75
+    Left = 481
     Top = 655
     ParamData = <
       item
@@ -621,8 +642,8 @@ object DMBroadlink: TDMBroadlink
       '  BLDevice.Type <> '#39'Universal WiFi Remote'#39
       'Order By'
       '  1')
-    Left = 887
-    Top = 249
+    Left = 75
+    Top = 307
   end
   object QCommonGetManufacturers: TUniQuery
     Connection = UCCommonDB
@@ -630,7 +651,7 @@ object DMBroadlink: TDMBroadlink
       'select Name'
       '  from Manufacturer'
       ' order by 1 ')
-    Left = 481
+    Left = 887
     Top = 597
   end
   object QGetCommonButtonByCode: TUniQuery
@@ -642,8 +663,8 @@ object DMBroadlink: TDMBroadlink
       ' where d.ID = :DeviceID and'
       '       b.Code = :Code and'
       '       b.DeviceID = d.ID ')
-    Left = 684
-    Top = 597
+    Left = 75
+    Top = 655
     ParamData = <
       item
         DataType = ftUnknown
@@ -693,7 +714,7 @@ object DMBroadlink: TDMBroadlink
       '  from Device'
       ' where UPPER(Name) = UPPER(:Name) and'
       '       ID <> :DevID')
-    Left = 684
+    Left = 887
     Top = 249
     ParamData = <
       item
@@ -723,8 +744,8 @@ object DMBroadlink: TDMBroadlink
   object TBLButtons: TFDTable
     Connection = FDCBL
     TableName = 'BLButtons'
-    Left = 684
-    Top = 423
+    Left = 75
+    Top = 481
   end
   object QGetBLButton: TFDQuery
     Connection = FDCBL
@@ -750,7 +771,7 @@ object DMBroadlink: TDMBroadlink
     Connection = FDCBL
     SQL.Strings = (
       'Select Max(ID) + 1 as NewID'
-      'from LBButtons')
+      'from BLButtons')
     Left = 481
     Top = 133
   end
@@ -774,7 +795,7 @@ object DMBroadlink: TDMBroadlink
     IndexFieldNames = 'ID'
     Connection = FDCBL
     TableName = 'Timers'
-    Left = 278
+    Left = 684
     Top = 539
   end
   object QGetTimerID: TFDQuery
@@ -782,7 +803,7 @@ object DMBroadlink: TDMBroadlink
     SQL.Strings = (
       'Select Max(ID) + 1 as NewID'
       'from Timers')
-    Left = 75
+    Left = 481
     Top = 423
   end
   object QGetTimers: TFDQuery
@@ -864,14 +885,14 @@ object DMBroadlink: TDMBroadlink
       '  BLButtons On BLButtons.DeviceMac = BLDevice.Mac'
       'where Timers.DeviceID = 0 and'
       '      Timers.MacroID = 0'
-      'Order By 9')
-    Left = 278
+      'Order By 9 asc')
+    Left = 684
     Top = 423
   end
   object TLocations: TFDTable
     Connection = FDCBL
     TableName = 'Locations'
-    Left = 481
+    Left = 887
     Top = 481
   end
   object QGetLocations: TFDQuery
@@ -884,7 +905,7 @@ object DMBroadlink: TDMBroadlink
       '  Locations."Default"'
       'From'
       '  Locations')
-    Left = 278
+    Left = 684
     Top = 307
   end
   object QResetDefaultLocation: TFDQuery
@@ -893,7 +914,7 @@ object DMBroadlink: TDMBroadlink
       'Update Locations'
       '  Set "Default" = False'
       'where UPPER(Name) <> UPPER(:Name)  ')
-    Left = 481
+    Left = 887
     Top = 423
     ParamData = <
       item
@@ -910,7 +931,7 @@ object DMBroadlink: TDMBroadlink
       '  Timers'
       'Where'
       '  UPPER(Timers.Location) = UPPER(:Location)')
-    Left = 481
+    Left = 887
     Top = 307
     ParamData = <
       item
@@ -929,7 +950,7 @@ object DMBroadlink: TDMBroadlink
       '  Macros On Timers.MacroID = Macros.ID'
       'Where'
       '  Upper(Macros.Name) = Upper(:MacroName)')
-    Left = 278
+    Left = 684
     Top = 365
     ParamData = <
       item
@@ -946,12 +967,123 @@ object DMBroadlink: TDMBroadlink
       '  Locations'
       'Where'
       '  Upper(Locations.Name) = Upper(:Name)')
-    Left = 75
+    Left = 481
     Top = 307
     ParamData = <
       item
         Name = 'NAME'
         ParamType = ptInput
       end>
+  end
+  object QGetDueTimers: TFDQuery
+    Connection = FDCBL
+    SQL.Strings = (
+      'Select'
+      '  Timers.ID,'
+      '  Timers.StartTime,'
+      '  Timers.RepeatType,'
+      '  Timers.RepeatInterval,'
+      '  Timers.MacroID,'
+      '  Timers.DeviceID,'
+      '  Timers.ButtonID,'
+      '  Timers.DeviceType,'
+      '  Timers.NextRun,'
+      '  Timers.IntervalType,'
+      '  Timers.BLRemoteName,'
+      '  Timers.DeltaTime,'
+      '  Timers.DeltaTimeType,'
+      '  Timers.DeltaTimeBA,'
+      '  Timers.Location,'
+      '  Device.Name As DeviceName,'
+      '  Buttons.Name As ButtName'
+      'From'
+      '  Timers'
+      '  Inner Join'
+      '  Device On Timers.DeviceID = Device.ID'
+      '  Inner Join'
+      '  Buttons On Timers.ButtonID = Buttons.ID'
+      'where Timers.DeviceID <> 0 and'
+      '      Timers.NextRun <= :DTNow'
+      'union'
+      'Select'
+      '  Timers.ID,'
+      '  Timers.StartTime,'
+      '  Timers.RepeatType,'
+      '  Timers.RepeatInterval,'
+      '  Timers.MacroID,'
+      '  Timers.DeviceID,'
+      '  Timers.ButtonID,'
+      '  Timers.DeviceType,'
+      '  Timers.NextRun,'
+      '  Timers.IntervalType,'
+      '  Timers.BLRemoteName,'
+      '  Timers.DeltaTime,'
+      '  Timers.DeltaTimeType,'
+      '  Timers.DeltaTimeBA,'
+      '  Timers.Location,'
+      '  Macros.Name As DeviceName,'
+      '  '#39'Macro'#39' as ButtName'
+      'From'
+      '  Timers'
+      '  Inner Join'
+      '  Macros On Timers.MacroID = Macros.ID'
+      'where Timers.MacroID <> 0 and'
+      '      Timers.NextRun <= :DTNow'
+      'Union'
+      'Select'
+      '  Timers.ID,'
+      '  Timers.StartTime,'
+      '  Timers.RepeatType,'
+      '  Timers.RepeatInterval,'
+      '  Timers.MacroID,'
+      '  Timers.DeviceID,'
+      '  Timers.ButtonID,'
+      '  Timers.DeviceType,'
+      '  Timers.NextRun,'
+      '  Timers.IntervalType,'
+      '  Timers.BLRemoteName,'
+      '  Timers.DeltaTime,'
+      '  Timers.DeltaTimeType,'
+      '  Timers.DeltaTimeBA,'
+      '  Timers.Location,'
+      '  BLButtons.Name as DeviceName,'
+      '  BLDevice.Name as ButtName'
+      'From'
+      '  BLDevice'
+      '  Inner Join'
+      '  Timers On Timers.BLRemoteName = BLDevice.Name'
+      '  Inner Join'
+      '  BLButtons On BLButtons.DeviceMac = BLDevice.Mac'
+      'where Timers.DeviceID = 0 and'
+      '      Timers.MacroID = 0 and'
+      '      Timers.NextRun <= :DTNow'
+      'Order By 9 asc')
+    Left = 278
+    Top = 307
+    ParamData = <
+      item
+        Name = 'DTNOW'
+        ParamType = ptInput
+      end>
+  end
+  object QGetBLRemotes: TFDQuery
+    Connection = FDCBL
+    SQL.Strings = (
+      'Select'
+      '  BLDevice.Name,'
+      '  BLDevice.Model,'
+      '  BLDevice.Type,'
+      '  BLDevice.IP,'
+      '  BLDevice.Mac,'
+      '  BLDevice.HexType,'
+      '  BLDevice.Manufacturer'
+      'From'
+      '  BLDevice'
+      'Where'
+      '  BLDevice.Type = '#39'Universal WiFi Remote'#39
+      'Order By'
+      '  1')
+    Left = 278
+    Top = 191
   end
 end

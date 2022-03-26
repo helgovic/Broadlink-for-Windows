@@ -185,10 +185,11 @@ begin
             Exit;
          end;
 
-      DMBroadlink.QGetTimers.Close;
-      DMBroadlink.QGetTimers.Open;
+      DMBroadlink.QGetDueTimers.Close;
+      DMBroadlink.QGetDueTimers.ParamByName('DTNow').AsDateTime := Now;
+      DMBroadlink.QGetDueTimers.Open;
 
-      while not DMBroadlink.QGetTimers.Eof do
+      while not DMBroadlink.QGetDueTimers.Eof do
          begin
 
             TimersFinished := False;
@@ -200,79 +201,119 @@ begin
                   Exit;
                end;
 
-            if DMBroadlink.QGetTimers.FieldByName('NextRun').AsDateTime <= now
+            if DMBroadlink.QGetDueTimers.FieldByName('MacroID').AsInteger > 0
             then
                begin
 
-                  if DMBroadlink.QGetTimers.FieldByName('MacroID').AsInteger > 0
+                  DMBroadlink.TMacros.FindKey([DMBroadlink.QGetDueTimers.FieldByName('MacroID').AsInteger]);
+
+                  DMBroadlink.QGetBLDevByName.Close;
+                  DMBroadlink.QGetBLDevByName.ParamByName('Name').AsString := DMBroadlink.QGetDueTimers.FieldByName('BLRemoteName').AsString;
+                  DMBroadlink.QGetBLDevByName.Open;
+
+                  if DMBroadlink.QGetBLDevByName.IsEmpty
+                  then
+                     begin
+                        ShowMessage('Broadlink device ' + DMBroadlink.QGetDueTimers.FieldByName('BLRemoteName').AsString + ' not found');
+                        Exit;
+                     end;
+
+                  DMBroadlink.QGetMacroButtons.Close;
+                  DMBroadlink.QGetMacroButtons.ParamByName('MacroName').AsString := DMBroadlink.TMacros.FieldByName('Name').AsString;
+                  DMBroadlink.QGetMacroButtons.Open;
+
+                  while not DMBroadlink.QGetMacroButtons.Eof do
+                     begin
+
+                        FileLines := TStringList.Create;
+                        FileLines.Add(ExtractFileDrive(AppDir));
+                        FileLines.Add('cd "' + AppDir + '"');
+
+                        FileLines.Add('python broadlink_cli2 --device "' + DMBroadlink.QGetBLDevByName.FieldByName('HexType').AsString + ' ' + DMBroadlink.QGetBLDevByName.FieldByName('IP').AsString + ' ' + DMBroadlink.QGetBLDevByName.FieldByName('Mac').AsString + '" --send "' + DMBroadlink.QGetMacroButtons.FieldByName('Code').AsString + '"');
+
+                        FileLines.SaveToFile(AppDir + '\Commands.bat');
+
+                        Execute(AppDir + '\Commands.bat', ExecOut);
+
+                        FileLines.DisposeOf;
+
+                        Sleep(DMBroadlink.QGetMacroButtons.FieldByName('wait').AsInteger);
+
+                        DMBroadlink.QGetMacroButtons.Next;
+
+                     end;
+
+               end
+            else
+               begin
+
+                  if (DMBroadlink.QGetDueTimers.FieldByName('DeviceType').AsString = 'IR') or
+                     (DMBroadlink.QGetDueTimers.FieldByName('DeviceType').AsString = 'RF')
                   then
                      begin
 
-                        DMBroadlink.TMacros.FindKey([DMBroadlink.QGetTimers.FieldByName('MacroID').AsInteger]);
-
                         DMBroadlink.QGetBLDevByName.Close;
-                        DMBroadlink.QGetBLDevByName.ParamByName('Name').AsString := DMBroadlink.QGetTimers.FieldByName('BLRemoteName').AsString;
+                        DMBroadlink.QGetBLDevByName.ParamByName('Name').AsString := DMBroadlink.QGetDueTimers.FieldByName('BLRemoteName').AsString;
                         DMBroadlink.QGetBLDevByName.Open;
 
                         if DMBroadlink.QGetBLDevByName.IsEmpty
                         then
                            begin
-                              ShowMessage('Broadlink device ' + DMBroadlink.QGetTimers.FieldByName('BLRemoteName').AsString + ' not found');
+                              ShowMessage('Broadlink device ' + DMBroadlink.QGetDueTimers.FieldByName('BLRemoteName').AsString + ' not found');
                               Exit;
                            end;
 
-                        DMBroadlink.QGetMacroButtons.Close;
-                        DMBroadlink.QGetMacroButtons.ParamByName('MacroName').AsString := DMBroadlink.TMacros.FieldByName('Name').AsString;
-                        DMBroadlink.QGetMacroButtons.Open;
+                        DMBroadlink.TButtons.FindKey([DMBroadlink.QGetDueTimers.FieldByName('ButtonID').AsInteger]);
 
-                        while not DMBroadlink.QGetMacroButtons.Eof do
-                           begin
+                        FileLines := TStringList.Create;
+                        FileLines.Add(ExtractFileDrive(AppDir));
+                        FileLines.Add('cd "' + AppDir + '"');
 
-                              FileLines := TStringList.Create;
-                              FileLines.Add(ExtractFileDrive(AppDir));
-                              FileLines.Add('cd "' + AppDir + '"');
+                        FileLines.Add('python broadlink_cli2 --device "' + DMBroadlink.QGetBLDevByName.FieldByName('HexType').AsString + ' ' + DMBroadlink.QGetBLDevByName.FieldByName('IP').AsString + ' ' + DMBroadlink.QGetBLDevByName.FieldByName('Mac').AsString + '" --send "' + DMBroadlink.TButtons.FieldByName('Code').AsString + '"');
 
-                              FileLines.Add('python broadlink_cli2 --device "' + DMBroadlink.QGetBLDevByName.FieldByName('HexType').AsString + ' ' + DMBroadlink.QGetBLDevByName.FieldByName('IP').AsString + ' ' + DMBroadlink.QGetBLDevByName.FieldByName('Mac').AsString + '" --send "' + DMBroadlink.QGetMacroButtons.FieldByName('Code').AsString + '"');
+                        FileLines.SaveToFile(AppDir + '\Commands.bat');
 
-                              FileLines.SaveToFile(AppDir + '\Commands.bat');
+                        Execute(AppDir + '\Commands.bat', ExecOut);
 
-                              Execute(AppDir + '\Commands.bat', ExecOut);
-
-                              FileLines.DisposeOf;
-
-                              Sleep(DMBroadlink.QGetMacroButtons.FieldByName('wait').AsInteger);
-
-                              DMBroadlink.QGetMacroButtons.Next;
-
-                           end;
+                        FileLines.DisposeOf;
 
                      end
                   else
-                     begin
+                     if DMBroadlink.QGetDueTimers.FieldByName('DeviceType').AsString  = 'WiFi Bulb'
+                     then
+                        begin
 
-                        if (DMBroadlink.QGetTimers.FieldByName('DeviceType').AsString = 'IR') or
-                           (DMBroadlink.QGetTimers.FieldByName('DeviceType').AsString = 'RF')
+                           DMBroadlink.TBLDevice.FindKey([DMBroadlink.QGetDueTimers.FieldByName('DeviceID').AsInteger]);
+
+                           DMBroadlink.TBLButtons.FindKey([DMBroadlink.QGetDueTimers.FieldByName('ButtonID').AsInteger]);
+
+                           FileLines := TStringList.Create;
+                           FileLines.Add(ExtractFileDrive(AppDir));
+                           FileLines.Add('cd "' + AppDir + '"');
+
+                           FileLines.Add('python broadlink_cli2 --device "' + DMBroadlink.TBLDevice.FieldByName('HexType').AsString + ' ' + DMBroadlink.TBLDevice.FieldByName('IP').AsString + ' ' + DMBroadlink.TBLDevice.FieldByName('Mac').AsString + '" --setlightstate "' + DMBroadlink.TBLButtons.FieldByName('Command').AsString + '"');
+
+                           FileLines.SaveToFile(AppDir + '\Commands.bat');
+
+                           Execute(AppDir + '\Commands.bat', ExecOut);
+
+                           FileLines.DisposeOf;
+
+                        end
+                     else
+                        if DMBroadlink.QGetDueTimers.FieldByName('DeviceType').AsString  = 'WiFi Switch'
                         then
                            begin
 
-                              DMBroadlink.QGetBLDevByName.Close;
-                              DMBroadlink.QGetBLDevByName.ParamByName('Name').AsString := DMBroadlink.QGetTimers.FieldByName('BLRemoteName').AsString;
-                              DMBroadlink.QGetBLDevByName.Open;
+                              DMBroadlink.TBLDevice.FindKey([DMBroadlink.QGetDueTimers.FieldByName('DeviceID').AsInteger]);
 
-                              if DMBroadlink.QGetBLDevByName.IsEmpty
-                              then
-                                 begin
-                                    ShowMessage('Broadlink device ' + DMBroadlink.QGetTimers.FieldByName('BLRemoteName').AsString + ' not found');
-                                    Exit;
-                                 end;
-
-                              DMBroadlink.TButtons.FindKey([DMBroadlink.QGetTimers.FieldByName('ButtonID').AsInteger]);
+                              DMBroadlink.TBLButtons.FindKey([DMBroadlink.QGetDueTimers.FieldByName('ButtonID').AsInteger]);
 
                               FileLines := TStringList.Create;
                               FileLines.Add(ExtractFileDrive(AppDir));
                               FileLines.Add('cd "' + AppDir + '"');
 
-                              FileLines.Add('python broadlink_cli2 --device "' + DMBroadlink.QGetBLDevByName.FieldByName('HexType').AsString + ' ' + DMBroadlink.QGetBLDevByName.FieldByName('IP').AsString + ' ' + DMBroadlink.QGetBLDevByName.FieldByName('Mac').AsString + '" --send "' + DMBroadlink.TButtons.FieldByName('Code').AsString + '"');
+                              FileLines.Add('python broadlink_cli2 --device "' + DMBroadlink.TBLDevice.FieldByName('HexType').AsString + ' ' + DMBroadlink.TBLDevice.FieldByName('IP').AsString + ' ' + DMBroadlink.TBLDevice.FieldByName('Mac').AsString + '" ' + DMBroadlink.TBLButtons.FieldByName('Command').AsString);
 
                               FileLines.SaveToFile(AppDir + '\Commands.bat');
 
@@ -280,189 +321,143 @@ begin
 
                               FileLines.DisposeOf;
 
-                           end
-                        else
-                           if DMBroadlink.QGetTimers.FieldByName('DeviceType').AsString  = 'WiFi Bulb'
-                           then
-                              begin
+                           end;
 
-                                 DMBroadlink.TBLDevice.FindKey([DMBroadlink.QGetTimers.FieldByName('DeviceID').AsInteger]);
+               end;
 
-                                 DMBroadlink.TBLButtons.FindKey([DMBroadlink.QGetTimers.FieldByName('ButtonID').AsInteger]);
+            DMBroadlink.TTimers.FindKey([DMBroadlink.QGetDueTimers.FieldByName('ID').AsInteger]);
 
-                                 FileLines := TStringList.Create;
-                                 FileLines.Add(ExtractFileDrive(AppDir));
-                                 FileLines.Add('cd "' + AppDir + '"');
+            if DMBroadlink.QGetDueTimers.FieldByName('RepeatType').AsString = 'Once'
+            then
+               DMBroadlink.TTimers.Delete
+            else
+               begin
 
-                                 FileLines.Add('python broadlink_cli2 --device "' + DMBroadlink.TBLDevice.FieldByName('HexType').AsString + ' ' + DMBroadlink.TBLDevice.FieldByName('IP').AsString + ' ' + DMBroadlink.TBLDevice.FieldByName('Mac').AsString + '" --setlightstate "' + DMBroadlink.TBLButtons.FieldByName('Command').AsString + '"');
+                  DMBroadlink.TTimers.Edit;
 
-                                 FileLines.SaveToFile(AppDir + '\Commands.bat');
-
-                                 Execute(AppDir + '\Commands.bat', ExecOut);
-
-                                 FileLines.DisposeOf;
-
-                              end
-                           else
-                              if DMBroadlink.QGetTimers.FieldByName('DeviceType').AsString  = 'WiFi Switch'
-                              then
-                                 begin
-
-                                    DMBroadlink.TBLDevice.FindKey([DMBroadlink.QGetTimers.FieldByName('DeviceID').AsInteger]);
-
-                                    DMBroadlink.TBLButtons.FindKey([DMBroadlink.QGetTimers.FieldByName('ButtonID').AsInteger]);
-
-                                    FileLines := TStringList.Create;
-                                    FileLines.Add(ExtractFileDrive(AppDir));
-                                    FileLines.Add('cd "' + AppDir + '"');
-
-                                    FileLines.Add('python broadlink_cli2 --device "' + DMBroadlink.TBLDevice.FieldByName('HexType').AsString + ' ' + DMBroadlink.TBLDevice.FieldByName('IP').AsString + ' ' + DMBroadlink.TBLDevice.FieldByName('Mac').AsString + '" ' + DMBroadlink.TBLButtons.FieldByName('Command').AsString);
-
-                                    FileLines.SaveToFile(AppDir + '\Commands.bat');
-
-                                    Execute(AppDir + '\Commands.bat', ExecOut);
-
-                                    FileLines.DisposeOf;
-
-                                 end;
-
-                     end;
-
-                  DMBroadlink.TTimers.FindKey([DMBroadlink.QGetTimers.FieldByName('ID').AsInteger]);
-
-                  if DMBroadlink.QGetTimers.FieldByName('RepeatType').AsString = 'Once'
+                  if DMBroadlink.QGetDueTimers.FieldByName('RepeatType').AsString = 'Repeat'
                   then
-                     DMBroadlink.TTimers.Delete
-                  else
                      begin
 
-                        DMBroadlink.TTimers.Edit;
-
-                        if DMBroadlink.QGetTimers.FieldByName('RepeatType').AsString = 'Repeat'
+                        if DMBroadlink.QGetDueTimers.FieldByName('IntervalType').AsString = 'Days'
                         then
-                           begin
+                           DMBroadlink.TTimers.FieldByName('NextRun').AsDateTime := IncDay(DMBroadlink.QGetDueTimers.FieldByName('NextRun').AsDateTime, DMBroadlink.QGetDueTimers.FieldByName('RepeatInterval').AsInteger);
 
-                              if DMBroadlink.QGetTimers.FieldByName('IntervalType').AsString = 'Days'
-                              then
-                                 DMBroadlink.TTimers.FieldByName('NextRun').AsDateTime := IncDay(DMBroadlink.QGetTimers.FieldByName('NextRun').AsDateTime, DMBroadlink.QGetTimers.FieldByName('RepeatInterval').AsInteger);
-
-                              if DMBroadlink.QGetTimers.FieldByName('IntervalType').AsString = 'Hours'
-                              then
-                                 DMBroadlink.TTimers.FieldByName('NextRun').AsDateTime := IncHour(DMBroadlink.QGetTimers.FieldByName('NextRun').AsDateTime, DMBroadlink.QGetTimers.FieldByName('RepeatInterval').AsInteger);
-
-                              if DMBroadlink.QGetTimers.FieldByName('IntervalType').AsString = 'Minutes'
-                              then
-                                 DMBroadlink.TTimers.FieldByName('NextRun').AsDateTime := IncMinute(DMBroadlink.QGetTimers.FieldByName('NextRun').AsDateTime, DMBroadlink.QGetTimers.FieldByName('RepeatInterval').AsInteger);
-
-                              if DMBroadlink.QGetTimers.FieldByName('IntervalType').AsString = 'Seconds'
-                              then
-                                 DMBroadlink.TTimers.FieldByName('NextRun').AsDateTime := IncSecond(DMBroadlink.QGetTimers.FieldByName('NextRun').AsDateTime, DMBroadlink.QGetTimers.FieldByName('RepeatInterval').AsInteger);
-
-                           end;
-
-                        if DMBroadlink.QGetTimers.FieldByName('RepeatType').AsString = 'Sunrise'
+                        if DMBroadlink.QGetDueTimers.FieldByName('IntervalType').AsString = 'Hours'
                         then
-                           begin
+                           DMBroadlink.TTimers.FieldByName('NextRun').AsDateTime := IncHour(DMBroadlink.QGetDueTimers.FieldByName('NextRun').AsDateTime, DMBroadlink.QGetDueTimers.FieldByName('RepeatInterval').AsInteger);
 
-                              DMBroadlink.TLocations.FindKey([DMBroadlink.QGetTimers.FieldByName('Location').AsString]);
-
-                              TmpTime := GetSunUpDown(True, Now, DMBroadlink.TLocations.FieldByName('Lattitude').AsString, DMBroadlink.TLocations.FieldByName('Longitude').AsString);
-
-                              if DMBroadlink.QGetTimers.FieldByName('DeltaTimeType').AsString = 'Hours'
-                              then
-                                 if DMBroadlink.QGetTimers.FieldByName('DeltaTimeBA').AsString = 'Before'
-                                 then
-                                    TmpTime :=  IncHour(TmpTime, -DMBroadlink.QGetTimers.FieldByName('DeltaTime').AsInteger)
-                                 else
-                                    TmpTime :=  IncHour(TmpTime, DMBroadlink.QGetTimers.FieldByName('DeltaTime').AsInteger)
-                              else
-                                 if DMBroadlink.QGetTimers.FieldByName('DeltaTimeBA').AsString = 'Before'
-                                 then
-                                    TmpTime :=  IncMinute(TmpTime, -DMBroadlink.QGetTimers.FieldByName('DeltaTime').AsInteger)
-                                 else
-                                    TmpTime :=  IncMinute(TmpTime, DMBroadlink.QGetTimers.FieldByName('DeltaTime').AsInteger);
-
-                              if TmpTime > now
-                              then
-                                 DMBroadlink.TTimers.FieldByName('NextRun').AsDateTime := TmpTime
-                              else
-                                 begin
-
-                                    TmpTime := GetSunUpDown(True, ToMorrow, DMBroadlink.TLocations.FieldByName('Lattitude').AsString, DMBroadlink.TLocations.FieldByName('Longitude').AsString);
-
-                                    if DMBroadlink.QGetTimers.FieldByName('DeltaTimeType').AsString = 'Hours'
-                                    then
-                                       if DMBroadlink.QGetTimers.FieldByName('DeltaTimeBA').AsString = 'Before'
-                                       then
-                                          TmpTime :=  IncHour(TmpTime, -DMBroadlink.QGetTimers.FieldByName('DeltaTime').AsInteger)
-                                       else
-                                          TmpTime :=  IncHour(TmpTime, DMBroadlink.QGetTimers.FieldByName('DeltaTime').AsInteger)
-                                    else
-                                       if DMBroadlink.QGetTimers.FieldByName('DeltaTimeBA').AsString = 'Before'
-                                       then
-                                          TmpTime :=  IncMinute(TmpTime, -DMBroadlink.QGetTimers.FieldByName('DeltaTime').AsInteger)
-                                       else
-                                          TmpTime :=  IncMinute(TmpTime, DMBroadlink.QGetTimers.FieldByName('DeltaTime').AsInteger);
-
-                                    DMBroadlink.TTimers.FieldByName('NextRun').AsDateTime := TmpTime;
-
-                                 end;
-
-                           end;
-
-                        if DMBroadlink.QGetTimers.FieldByName('RepeatType').AsString = 'Sunset'
+                        if DMBroadlink.QGetDueTimers.FieldByName('IntervalType').AsString = 'Minutes'
                         then
-                           begin
+                           DMBroadlink.TTimers.FieldByName('NextRun').AsDateTime := IncMinute(DMBroadlink.QGetDueTimers.FieldByName('NextRun').AsDateTime, DMBroadlink.QGetDueTimers.FieldByName('RepeatInterval').AsInteger);
 
-                              DMBroadlink.TLocations.FindKey([DMBroadlink.QGetTimers.FieldByName('Location').AsString]);
-
-                              TmpTime := GetSunUpDown(False, Now, DMBroadlink.TLocations.FieldByName('Lattitude').AsString, DMBroadlink.TLocations.FieldByName('Longitude').AsString);
-
-                              if DMBroadlink.QGetTimers.FieldByName('DeltaTimeType').AsString = 'Hours'
-                              then
-                                 if DMBroadlink.QGetTimers.FieldByName('DeltaTimeBA').AsString = 'Before'
-                                 then
-                                    TmpTime :=  IncHour(TmpTime, -DMBroadlink.QGetTimers.FieldByName('DeltaTime').AsInteger)
-                                 else
-                                    TmpTime :=  IncHour(TmpTime, DMBroadlink.QGetTimers.FieldByName('DeltaTime').AsInteger)
-                              else
-                                 if DMBroadlink.QGetTimers.FieldByName('DeltaTimeBA').AsString = 'Before'
-                                 then
-                                    TmpTime :=  IncMinute(TmpTime, -DMBroadlink.QGetTimers.FieldByName('DeltaTime').AsInteger)
-                                 else
-                                    TmpTime :=  IncMinute(TmpTime, DMBroadlink.QGetTimers.FieldByName('DeltaTime').AsInteger);
-
-                              if TmpTime > now
-                              then
-                                 DMBroadlink.TTimers.FieldByName('NextRun').AsDateTime := TmpTime
-                              else
-                                 begin
-
-                                    TmpTime := GetSunUpDown(False, ToMorrow, DMBroadlink.TLocations.FieldByName('Lattitude').AsString, DMBroadlink.TLocations.FieldByName('Longitude').AsString);
-
-                                    if DMBroadlink.QGetTimers.FieldByName('DeltaTimeType').AsString = 'Hours'
-                                    then
-                                       if DMBroadlink.QGetTimers.FieldByName('DeltaTimeBA').AsString = 'Before'
-                                       then
-                                          TmpTime :=  IncHour(TmpTime, -DMBroadlink.QGetTimers.FieldByName('DeltaTime').AsInteger)
-                                       else
-                                          TmpTime :=  IncHour(TmpTime, DMBroadlink.QGetTimers.FieldByName('DeltaTime').AsInteger)
-                                    else
-                                       if DMBroadlink.QGetTimers.FieldByName('DeltaTimeBA').AsString = 'Before'
-                                       then
-                                          TmpTime :=  IncMinute(TmpTime, -DMBroadlink.QGetTimers.FieldByName('DeltaTime').AsInteger)
-                                       else
-                                          TmpTime :=  IncMinute(TmpTime, DMBroadlink.QGetTimers.FieldByName('DeltaTime').AsInteger);
-
-                                    DMBroadlink.TTimers.FieldByName('NextRun').AsDateTime := TmpTime;
-
-                                 end;
-
-                           end;
-
-                        DMBroadlink.TTimers.Post;
+                        if DMBroadlink.QGetDueTimers.FieldByName('IntervalType').AsString = 'Seconds'
+                        then
+                           DMBroadlink.TTimers.FieldByName('NextRun').AsDateTime := IncSecond(DMBroadlink.QGetDueTimers.FieldByName('NextRun').AsDateTime, DMBroadlink.QGetDueTimers.FieldByName('RepeatInterval').AsInteger);
 
                      end;
+
+                  if DMBroadlink.QGetDueTimers.FieldByName('RepeatType').AsString = 'Sunrise'
+                  then
+                     begin
+
+                        DMBroadlink.TLocations.FindKey([DMBroadlink.QGetDueTimers.FieldByName('Location').AsString]);
+
+                        TmpTime := GetSunUpDown(True, Now, DMBroadlink.TLocations.FieldByName('Lattitude').AsString, DMBroadlink.TLocations.FieldByName('Longitude').AsString);
+
+                        if DMBroadlink.QGetDueTimers.FieldByName('DeltaTimeType').AsString = 'Hours'
+                        then
+                           if DMBroadlink.QGetDueTimers.FieldByName('DeltaTimeBA').AsString = 'Before'
+                           then
+                              TmpTime :=  IncHour(TmpTime, -DMBroadlink.QGetDueTimers.FieldByName('DeltaTime').AsInteger)
+                           else
+                              TmpTime :=  IncHour(TmpTime, DMBroadlink.QGetDueTimers.FieldByName('DeltaTime').AsInteger)
+                        else
+                           if DMBroadlink.QGetDueTimers.FieldByName('DeltaTimeBA').AsString = 'Before'
+                           then
+                              TmpTime :=  IncMinute(TmpTime, -DMBroadlink.QGetDueTimers.FieldByName('DeltaTime').AsInteger)
+                           else
+                              TmpTime :=  IncMinute(TmpTime, DMBroadlink.QGetDueTimers.FieldByName('DeltaTime').AsInteger);
+
+                        if TmpTime > now
+                        then
+                           DMBroadlink.TTimers.FieldByName('NextRun').AsDateTime := TmpTime
+                        else
+                           begin
+
+                              TmpTime := GetSunUpDown(True, ToMorrow, DMBroadlink.TLocations.FieldByName('Lattitude').AsString, DMBroadlink.TLocations.FieldByName('Longitude').AsString);
+
+                              if DMBroadlink.QGetDueTimers.FieldByName('DeltaTimeType').AsString = 'Hours'
+                              then
+                                 if DMBroadlink.QGetDueTimers.FieldByName('DeltaTimeBA').AsString = 'Before'
+                                 then
+                                    TmpTime :=  IncHour(TmpTime, -DMBroadlink.QGetDueTimers.FieldByName('DeltaTime').AsInteger)
+                                 else
+                                    TmpTime :=  IncHour(TmpTime, DMBroadlink.QGetDueTimers.FieldByName('DeltaTime').AsInteger)
+                              else
+                                 if DMBroadlink.QGetDueTimers.FieldByName('DeltaTimeBA').AsString = 'Before'
+                                 then
+                                    TmpTime :=  IncMinute(TmpTime, -DMBroadlink.QGetDueTimers.FieldByName('DeltaTime').AsInteger)
+                                 else
+                                    TmpTime :=  IncMinute(TmpTime, DMBroadlink.QGetDueTimers.FieldByName('DeltaTime').AsInteger);
+
+                              DMBroadlink.TTimers.FieldByName('NextRun').AsDateTime := TmpTime;
+
+                           end;
+
+                     end;
+
+                  if DMBroadlink.QGetDueTimers.FieldByName('RepeatType').AsString = 'Sunset'
+                  then
+                     begin
+
+                        DMBroadlink.TLocations.FindKey([DMBroadlink.QGetDueTimers.FieldByName('Location').AsString]);
+
+                        TmpTime := GetSunUpDown(False, Now, DMBroadlink.TLocations.FieldByName('Lattitude').AsString, DMBroadlink.TLocations.FieldByName('Longitude').AsString);
+
+                        if DMBroadlink.QGetDueTimers.FieldByName('DeltaTimeType').AsString = 'Hours'
+                        then
+                           if DMBroadlink.QGetDueTimers.FieldByName('DeltaTimeBA').AsString = 'Before'
+                           then
+                              TmpTime :=  IncHour(TmpTime, -DMBroadlink.QGetDueTimers.FieldByName('DeltaTime').AsInteger)
+                           else
+                              TmpTime :=  IncHour(TmpTime, DMBroadlink.QGetDueTimers.FieldByName('DeltaTime').AsInteger)
+                        else
+                           if DMBroadlink.QGetDueTimers.FieldByName('DeltaTimeBA').AsString = 'Before'
+                           then
+                              TmpTime :=  IncMinute(TmpTime, -DMBroadlink.QGetDueTimers.FieldByName('DeltaTime').AsInteger)
+                           else
+                              TmpTime :=  IncMinute(TmpTime, DMBroadlink.QGetDueTimers.FieldByName('DeltaTime').AsInteger);
+
+                        if TmpTime > now
+                        then
+                           DMBroadlink.TTimers.FieldByName('NextRun').AsDateTime := TmpTime
+                        else
+                           begin
+
+                              TmpTime := GetSunUpDown(False, ToMorrow, DMBroadlink.TLocations.FieldByName('Lattitude').AsString, DMBroadlink.TLocations.FieldByName('Longitude').AsString);
+
+                              if DMBroadlink.QGetDueTimers.FieldByName('DeltaTimeType').AsString = 'Hours'
+                              then
+                                 if DMBroadlink.QGetDueTimers.FieldByName('DeltaTimeBA').AsString = 'Before'
+                                 then
+                                    TmpTime :=  IncHour(TmpTime, -DMBroadlink.QGetDueTimers.FieldByName('DeltaTime').AsInteger)
+                                 else
+                                    TmpTime :=  IncHour(TmpTime, DMBroadlink.QGetDueTimers.FieldByName('DeltaTime').AsInteger)
+                              else
+                                 if DMBroadlink.QGetDueTimers.FieldByName('DeltaTimeBA').AsString = 'Before'
+                                 then
+                                    TmpTime :=  IncMinute(TmpTime, -DMBroadlink.QGetDueTimers.FieldByName('DeltaTime').AsInteger)
+                                 else
+                                    TmpTime :=  IncMinute(TmpTime, DMBroadlink.QGetDueTimers.FieldByName('DeltaTime').AsInteger);
+
+                              DMBroadlink.TTimers.FieldByName('NextRun').AsDateTime := TmpTime;
+
+                           end;
+
+                     end;
+
+                  DMBroadlink.TTimers.Post;
 
                end;
 
@@ -473,7 +468,7 @@ begin
                   Exit;
                end;
 
-            DMBroadlink.QGetTimers.Next;
+            DMBroadlink.QGetDueTimers.Next;
 
          end;
 

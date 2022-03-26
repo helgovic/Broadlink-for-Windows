@@ -3,8 +3,8 @@ object FAddTimer: TFAddTimer
   Top = 0
   BorderStyle = bsToolWindow
   Caption = 'Add Timer'
-  ClientHeight = 636
-  ClientWidth = 580
+  ClientHeight = 608
+  ClientWidth = 568
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,19 +19,19 @@ object FAddTimer: TFAddTimer
     AlignWithMargins = True
     Left = 10
     Top = 10
-    Width = 567
+    Width = 555
     Height = 249
     Margins.Left = 10
     Margins.Top = 10
     Align = alTop
     Caption = 'When'
     TabOrder = 0
-    ExplicitWidth = 561
+    ExplicitWidth = 549
     object GBOnce: TJvGroupBox
       AlignWithMargins = True
       Left = 12
       Top = 27
-      Width = 550
+      Width = 538
       Height = 60
       Margins.Left = 10
       Margins.Top = 10
@@ -41,7 +41,7 @@ object FAddTimer: TFAddTimer
       Checkable = True
       PropagateEnable = True
       OnCheckBoxClick = GBOnceCheckBoxClick
-      ExplicitWidth = 544
+      ExplicitWidth = 532
       object ADTPOnce: TAdvDateTimePicker
         Left = 10
         Top = 27
@@ -72,7 +72,7 @@ object FAddTimer: TFAddTimer
       AlignWithMargins = True
       Left = 12
       Top = 100
-      Width = 550
+      Width = 538
       Height = 60
       Margins.Left = 10
       Margins.Top = 10
@@ -83,7 +83,7 @@ object FAddTimer: TFAddTimer
       Checked = False
       PropagateEnable = True
       OnCheckBoxClick = GBRepeatCheckBoxClick
-      ExplicitWidth = 544
+      ExplicitWidth = 532
       object AERepeat: TAdvEdit
         Left = 10
         Top = 27
@@ -165,7 +165,7 @@ object FAddTimer: TFAddTimer
       AlignWithMargins = True
       Left = 12
       Top = 173
-      Width = 550
+      Width = 538
       Height = 60
       Margins.Left = 10
       Margins.Top = 10
@@ -176,7 +176,7 @@ object FAddTimer: TFAddTimer
       Checked = False
       PropagateEnable = True
       OnCheckBoxClick = GBSunriseCheckBoxClick
-      ExplicitWidth = 544
+      ExplicitWidth = 532
       object INewLocation: TImage
         Left = 506
         Top = 29
@@ -345,14 +345,14 @@ object FAddTimer: TFAddTimer
   end
   object Panel1: TPanel
     Left = 0
-    Top = 511
-    Width = 580
+    Top = 483
+    Width = 568
     Height = 125
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 3
-    ExplicitTop = 497
-    ExplicitWidth = 574
+    ExplicitTop = 469
+    ExplicitWidth = 562
     object BSaveTimer: TButton
       Left = 157
       Top = 55
@@ -374,7 +374,7 @@ object FAddTimer: TFAddTimer
     object ACBBLRem: TAdvComboBox
       Left = 7
       Top = 20
-      Width = 567
+      Width = 555
       Height = 23
       Color = clWindow
       Version = '1.4.1.0'
@@ -398,7 +398,7 @@ object FAddTimer: TFAddTimer
     AlignWithMargins = True
     Left = 10
     Top = 272
-    Width = 567
+    Width = 555
     Height = 99
     Margins.Left = 10
     Margins.Top = 10
@@ -408,7 +408,7 @@ object FAddTimer: TFAddTimer
     Checkable = True
     PropagateEnable = True
     OnCheckBoxClick = AGBButtonCheckBoxClick
-    ExplicitWidth = 561
+    ExplicitWidth = 549
     object ACBButton: TAdvComboBox
       Left = 277
       Top = 48
@@ -459,7 +459,7 @@ object FAddTimer: TFAddTimer
     AlignWithMargins = True
     Left = 10
     Top = 384
-    Width = 567
+    Width = 555
     Height = 99
     Margins.Left = 10
     Margins.Top = 10
@@ -470,7 +470,7 @@ object FAddTimer: TFAddTimer
     Checked = False
     PropagateEnable = True
     OnCheckBoxClick = ACGMacroCheckBoxClick
-    ExplicitWidth = 561
+    ExplicitWidth = 549
     object ACBMacro: TAdvComboBox
       AlignWithMargins = True
       Left = 10

@@ -77,31 +77,40 @@ object FAddLightButton: TFAddLightButton
     ExplicitTop = 269
     ExplicitWidth = 731
     object BLBTest: TButton
-      Left = 313
+      Left = 370
       Top = 16
       Width = 110
       Height = 50
       Caption = 'Test'
-      TabOrder = 1
+      TabOrder = 2
       OnClick = BLBTestClick
     end
     object BLBSave: TButton
-      Left = 427
+      Left = 484
       Top = 16
       Width = 110
       Height = 50
       Caption = 'Save'
-      TabOrder = 2
+      TabOrder = 3
       OnClick = BLBSaveClick
     end
     object BLBGetLightState: TButton
-      Left = 199
+      Left = 256
       Top = 16
       Width = 110
       Height = 50
       Caption = 'Get Current State'
-      TabOrder = 0
+      TabOrder = 1
       OnClick = BLBGetLightStateClick
+    end
+    object BAddLightButtonClose: TButton
+      Left = 142
+      Top = 16
+      Width = 110
+      Height = 50
+      Caption = 'Close'
+      TabOrder = 0
+      OnClick = BAddLightButtonCloseClick
     end
   end
   object GBColor: TAdvGroupBox
@@ -136,9 +145,11 @@ object FAddLightButton: TFAddLightButton
       LabelFont.Style = []
       Lookup.Separator = ';'
       Color = clWindow
+      MaxLength = 3
       TabOrder = 0
       Text = '255'
       Visible = True
+      OnExit = AELBRedExit
       Version = '2.9.4.2'
     end
     object AELBGreen: TAdvEdit
@@ -166,6 +177,7 @@ object FAddLightButton: TFAddLightButton
       TabOrder = 2
       Text = '255'
       Visible = True
+      OnExit = AELBRedExit
       Version = '2.9.4.2'
     end
     object AELBBlue: TAdvEdit
@@ -193,11 +205,12 @@ object FAddLightButton: TFAddLightButton
       TabOrder = 4
       Text = '255'
       Visible = True
+      OnExit = AELBRedExit
       Version = '2.9.4.2'
     end
     object BLBSelectColor: TButton
-      Left = 10
-      Top = 199
+      Left = 12
+      Top = 203
       Width = 215
       Height = 50
       Caption = 'Select Color'
@@ -227,8 +240,9 @@ object FAddLightButton: TFAddLightButton
       Color = clWindow
       MaxLength = 3
       TabOrder = 5
-      Text = '255'
+      Text = '100'
       Visible = True
+      OnExit = AELBHueExit
       Version = '2.9.4.2'
     end
     object AELBSaturation: TAdvEdit
@@ -237,7 +251,6 @@ object FAddLightButton: TFAddLightButton
       Width = 100
       Height = 23
       EditAlign = eaRight
-      EditType = etNumeric
       EmptyTextStyle = []
       FlatLineColor = 11250603
       FocusColor = clWindow
@@ -254,8 +267,9 @@ object FAddLightButton: TFAddLightButton
       Color = clWindow
       MaxLength = 3
       TabOrder = 3
-      Text = '255'
+      Text = '100'
       Visible = True
+      OnExit = AELBHueExit
       Version = '2.9.4.2'
     end
     object AELBHue: TAdvEdit
@@ -281,8 +295,9 @@ object FAddLightButton: TFAddLightButton
       Color = clWindow
       MaxLength = 3
       TabOrder = 1
-      Text = '255'
+      Text = '360'
       Visible = True
+      OnExit = AELBHueExit
       Version = '2.9.4.2'
     end
   end
@@ -309,7 +324,7 @@ object FAddLightButton: TFAddLightButton
     Lookup.Separator = ';'
     Color = clWindow
     TabOrder = 3
-    Text = '0'
+    Text = '6500'
     Visible = True
     Version = '2.9.4.2'
   end
@@ -422,7 +437,6 @@ object FAddLightButton: TFAddLightButton
     Width = 237
     Height = 23
     ParentCustomHint = False
-    EditAlign = eaRight
     EditType = etAlphaNumeric
     EmptyTextStyle = []
     FlatLineColor = 11250603

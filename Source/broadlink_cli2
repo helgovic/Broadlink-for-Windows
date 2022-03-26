@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import enum
 import argparse
 import base64
 import codecs
@@ -14,6 +15,7 @@ from broadlink.const import DEFAULT_PORT
 from broadlink.exceptions import ReadError, StorageError
 import array, struct
 import os.path
+#import json
 
 TICK = 32.84
 TIMEOUT = 30
@@ -98,10 +100,10 @@ parser.add_argument("--rfscanlearn", action="store_true", help="rf scan learning
 parser.add_argument("--learnfile", help="save learned command to a specified file")
 parser.add_argument("--durations", action="store_true",
                     help="use durations in micro seconds instead of the Broadlink format")
-parser.add_argument("--convert", action="store_true", help="convert input data to durations")
-parser.add_argument("--joinwifi", nargs=2, help="Args are SSID PASSPHRASE to configure Broadlink device with")
+parser.add_argument("--convert", action="store_true", help="convert input data to durati/ons")
+parser.add_argument("--joinwifi", nargs=3, help="Args are SSID PASSPHRASE to configure Broadlink device with")
 parser.add_argument("--getlightstate", action="store_true", help="Get light bulb state")
-parser.add_argument("--setlightstate", action="store_true", help="Set light bulb state")
+parser.add_argument("--setlightstate", help="Set light bulb state")
 parser.add_argument("data", nargs='*', help="Data to send or convert")
 args = parser.parse_args()
 
@@ -120,7 +122,7 @@ if args.host or args.device:
     dev.auth()
 
 if args.joinwifi:
-    broadlink.setup(args.joinwifi[0], args.joinwifi[1], 4)
+    broadlink.setup(args.joinwifi[0], args.joinwifi[1], int(args.joinwifi[2]))
 
 if args.convert:
     data = bytearray.fromhex(''.join(args.data))
@@ -269,4 +271,34 @@ if args.getlightstate:
     state = dev.get_state() 
     print("State : {}".format(state))
 if args.setlightstate:
-    dev.set_state(args.setlightstate)
+    values = args.setlightstate.split()
+    for i in range(len(values)):
+        values2 = values[i].split("=")
+        if values2[0] == "pwr":
+            dev.set_state(pwr=int(values2[1]))
+        if values2[0] == "red":
+            dev.set_state(red=int(values2[1]))
+        if values2[0] == "green":
+            dev.set_state(green=int(values2[1]))
+        if values2[0] == "blue":
+            dev.set_state(blue=int(values2[1]))
+        if values2[0] == "brightness":
+            dev.set_state(brightness=int(values2[1]))
+        if values2[0] == "colortemp":
+            dev.set_state(colortemp=int(values2[1]))
+        if values2[0] == "hue":
+            dev.set_state(hue=int(values2[1]))
+        if values2[0] == "saturation":
+            dev.set_state(saturation=int(values2[1]))
+        if values2[0] == "transitionduration":
+            dev.set_state(transitionduration=int(values2[1]))
+        if values2[0] == "maxworktime":
+            dev.set_state(maxworktime=int(values2[1]))
+        if values2[0] == "bulb_colormode":
+            dev.set_state(bulb_colormode=int(values2[1]))
+        if values2[0] == "bulb_scenes":
+            dev.set_state(bulb_scenes=values2[1])
+        if values2[0] == "bulb_scene":
+            dev.set_state(bulb_scene=int(values2[1]))
+        if values2[0] == "bulb_sceneidx":
+            dev.set_state(bulb_sceneidx=int(values2[1]))

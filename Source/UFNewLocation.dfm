@@ -3,8 +3,8 @@ object FNewLocation: TFNewLocation
   Top = 0
   BorderStyle = bsToolWindow
   Caption = 'New location'
-  ClientHeight = 333
-  ClientWidth = 335
+  ClientHeight = 319
+  ClientWidth = 329
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -80,14 +80,12 @@ object FNewLocation: TFNewLocation
   end
   object Panel1: TPanel
     Left = 0
-    Top = 232
-    Width = 335
+    Top = 218
+    Width = 329
     Height = 101
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 4
-    ExplicitTop = 218
-    ExplicitWidth = 329
     object HTMLabel1: THTMLabel
       Left = 16
       Top = 13

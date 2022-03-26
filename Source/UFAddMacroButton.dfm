@@ -4,8 +4,8 @@ object FAddMacroButton: TFAddMacroButton
   BorderStyle = bsToolWindow
   BorderWidth = 1
   Caption = 'Add Macro Button'
-  ClientHeight = 383
-  ClientWidth = 693
+  ClientHeight = 355
+  ClientWidth = 681
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,28 +20,26 @@ object FAddMacroButton: TFAddMacroButton
     Left = 0
     Top = 33
     Width = 350
-    Height = 273
+    Height = 245
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitHeight = 259
     object LBAMBDevices: TListBox
       Left = 0
       Top = 0
       Width = 350
-      Height = 273
+      Height = 245
       Align = alClient
       Columns = 2
       ItemHeight = 15
       TabOrder = 0
       OnClick = LBAMBDevicesClick
-      ExplicitHeight = 259
     end
   end
   object Panel3: TPanel
     Left = 0
     Top = 0
-    Width = 693
+    Width = 681
     Height = 33
     Align = alTop
     BevelOuter = bvNone
@@ -65,29 +63,25 @@ object FAddMacroButton: TFAddMacroButton
   object Panel4: TPanel
     Left = 350
     Top = 33
-    Width = 343
-    Height = 273
+    Width = 331
+    Height = 245
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitWidth = 337
-    ExplicitHeight = 259
     object LBAMBButtons: TListBox
       Left = 0
       Top = 0
-      Width = 343
-      Height = 273
+      Width = 331
+      Height = 245
       Align = alClient
       ItemHeight = 15
       TabOrder = 0
-      ExplicitWidth = 337
-      ExplicitHeight = 259
     end
   end
   object Panel2: TPanel
     Left = 0
-    Top = 306
-    Width = 693
+    Top = 278
+    Width = 681
     Height = 77
     Align = alBottom
     BevelOuter = bvNone

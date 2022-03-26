@@ -51,6 +51,7 @@ type
     RESTResponse1: TRESTResponse;
     BTimers: TButton;
     MILocations: TMenuItem;
+    MIDevScan: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure BAddDeviceClick(Sender: TObject);
     procedure BAddButtonClick(Sender: TObject);
@@ -72,11 +73,14 @@ type
     procedure BTimersClick(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure MILocationsClick(Sender: TObject);
+    procedure MIDevScanClick(Sender: TObject);
   private
     procedure ExecOut(const Text: string);
     procedure LoadButtons;
     procedure LoadDevices;
     procedure OpenDB;
+    procedure ScanForDevices;
+    procedure LoadBLRemotes;
     { Private declarations }
   public
     { Public declarations }
@@ -289,10 +293,6 @@ begin
    then
       begin
 
-//         DMBroadlink.QGetBLDevByName.Close;
-//         DMBroadlink.QGetBLDevByName.ParamByName('Name').AsString := SGDevice.Cells[0, SGDevice.Row];
-//         DMBroadlink.QGetBLDevByName.Open;
-
          DMBroadlink.QGetBLButton.Close;
          DMBroadlink.QGetBLButton.ParamByName('DeviceName').AsString := SGDevice.Cells[0, SGDevice.Row];
          DMBroadlink.QGetBLButton.ParamByName('ButtName').AsString := SGButtons.Cells[0, SGButtons.Row];
@@ -311,6 +311,8 @@ begin
 
                DMBroadlink.TBLButtons.FindKey([DMBroadlink.QGetBLButton.FieldByName('ID').AsInteger]);
                DMBroadlink.TBLButtons.Delete;
+
+               LoadButtons;
 
             end;
 
@@ -335,25 +337,39 @@ end;
 procedure TFBroadlink.BDelDeviceClick(Sender: TObject);
 begin
 
-   if (SGDevice.Cells[3, SGDevice.Row] <> 'IR') and
-      (SGDevice.Cells[3, SGDevice.Row] <> 'RF')
-   then
-      begin
-         ShowMessage('You cannot delete this device');
-         Exit;
-      end;
-
    if MessageDlg('Delete ' + SGDevice.Cells[0, SGDevice.Row] + '?', TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbOK, TMsgDlgBtn.mbCancel], 0) = mrOK
    then
       begin
 
-         DMBroadlink.TDevice.IndexName := 'DevNameIdx';
-
-         if DMBroadlink.TDevice.FindKey([SGDevice.Cells[0, SGDevice.Row]])
+         if (SGDevice.Cells[3, SGDevice.Row] = 'IR') or
+            (SGDevice.Cells[3, SGDevice.Row] = 'RF')
          then
             begin
-               DMBroadlink.TDevice.Delete;
-               LoadDevices;
+
+               DMBroadlink.TDevice.IndexName := 'DevNameIdx';
+
+               if DMBroadlink.TDevice.FindKey([SGDevice.Cells[0, SGDevice.Row]])
+               then
+                  begin
+                     DMBroadlink.TDevice.Delete;
+                     LoadDevices;
+                  end;
+
+            end
+         else
+            begin
+
+               DMBroadlink.QGetBLDevByName.Close;
+               DMBroadlink.QGetBLDevByName.ParamByName('Name').AsString := SGDevice.Cells[0, SGDevice.Row];
+               DMBroadlink.QGetBLDevByName.Open;
+
+               if DMBroadlink.TBLDevice.FindKey([DMBroadlink.QGetBLDevByName.FieldByName('Mac').AsString])
+               then
+                  begin
+                     DMBroadlink.TBLDevice.Delete;
+                     LoadDevices;
+                  end;
+
             end;
 
       end;
@@ -414,13 +430,9 @@ end;
 procedure TFBroadlink.BEditDeviceClick(Sender: TObject);
 begin
 
-   if SGDevice.Cells[3, SGDevice.Row] = 'WiFi Bulb'
+   if (SGDevice.Cells[3, SGDevice.Row] = 'IR') or
+      (SGDevice.Cells[3, SGDevice.Row] = 'RF')
    then
-      begin
-         FBLDevName.State := 'Edit';
-         FBLDevName.ShowModal;
-      end
-   else
       begin
 
          FAddDevice.State := 'Edit';
@@ -441,6 +453,11 @@ begin
 
             end;
 
+      end
+   else
+      begin
+         FBLDevName.State := 'Edit';
+         FBLDevName.ShowModal;
       end;
 
 end;
@@ -457,24 +474,37 @@ begin
    FileLines.Add(ExtractFileDrive(AppDir));
    FileLines.Add('cd "' + AppDir + '"');
 
-   DMBroadlink.TDevice.IndexName := 'DevNameIdx';
-   DMBroadlink.TDevice.FindKey([FBroadlink.SGDevice.Cells[0, FBroadlink.SGDevice.Row]]);
-
-   DMBroadlink.QGetBLDevByName.Close;
-   DMBroadlink.QGetBLDevByName.ParamByName('Name').AsString := StrBefore(' : ', FBroadlink.CBDevice.Text);
-   DMBroadlink.QGetBLDevByName.Open;
-
-   if DMBroadlink.QGetBLDevByName.FieldByName('Type').AsString  = 'Universal WiFi Remote'
+   if (FBroadlink.SGDevice.Cells[0, FBroadlink.SGDevice.Row] = 'RF') or
+      (FBroadlink.SGDevice.Cells[0, FBroadlink.SGDevice.Row] = 'IR')
    then
-      FileLines.Add('python broadlink_cli2 --device "' + DMBroadlink.QGetBLDevByName.FieldByName('HexType').AsString + ' ' + DMBroadlink.QGetBLDevByName.FieldByName('IP').AsString + ' ' + DMBroadlink.QGetBLDevByName.FieldByName('Mac').AsString + '" --send "' + SGButtons.Cells[1, SGButtons.Row] + '"')
+      begin
+
+         DMBroadlink.TDevice.IndexName := 'DevNameIdx';
+         DMBroadlink.TDevice.FindKey([FBroadlink.SGDevice.Cells[0, FBroadlink.SGDevice.Row]]);
+
+         DMBroadlink.QGetBLDevByName.Close;
+         DMBroadlink.QGetBLDevByName.ParamByName('Name').AsString := StrBefore(' : ', FBroadlink.CBDevice.Text);
+         DMBroadlink.QGetBLDevByName.Open;
+
+         FileLines.Add('python broadlink_cli2 --device "' + DMBroadlink.QGetBLDevByName.FieldByName('HexType').AsString + ' ' + DMBroadlink.QGetBLDevByName.FieldByName('IP').AsString + ' ' + DMBroadlink.QGetBLDevByName.FieldByName('Mac').AsString + '" --send "' + SGButtons.Cells[1, SGButtons.Row] + '"')
+
+      end
    else
-      if DMBroadlink.QGetBLDevByName.FieldByName('Type').AsString  = 'WiFi Bulb'
-      then
-         FileLines.Add('python broadlink_cli2 --device "' + DMBroadlink.QGetBLDevByName.FieldByName('HexType').AsString + ' ' + DMBroadlink.QGetBLDevByName.FieldByName('IP').AsString + ' ' + DMBroadlink.QGetBLDevByName.FieldByName('Mac').AsString + '" --setlightstate "' + SGButtons.Cells[1, SGButtons.Row] + '"')
-      else
-         if DMBroadlink.QGetBLDevByName.FieldByName('Type').AsString  = 'WiFi Switch'
+      begin
+
+         DMBroadlink.QGetBLDevByName.Close;
+         DMBroadlink.QGetBLDevByName.ParamByName('Name').AsString := SGDevice.Cells[0, FBroadlink.SGDevice.Row];
+         DMBroadlink.QGetBLDevByName.Open;
+
+         if DMBroadlink.QGetBLDevByName.FieldByName('Type').AsString  = 'WiFi Bulb'
          then
-            FileLines.Add('python broadlink_cli2 --device "' + DMBroadlink.QGetBLDevByName.FieldByName('HexType').AsString + ' ' + DMBroadlink.QGetBLDevByName.FieldByName('IP').AsString + ' ' + DMBroadlink.QGetBLDevByName.FieldByName('Mac').AsString + '" ' + SGButtons.Cells[1, SGButtons.Row]);
+            FileLines.Add('python broadlink_cli2 --device "' + DMBroadlink.QGetBLDevByName.FieldByName('HexType').AsString + ' ' + DMBroadlink.QGetBLDevByName.FieldByName('IP').AsString + ' ' + DMBroadlink.QGetBLDevByName.FieldByName('Mac').AsString + '" --setlightstate "' + SGButtons.Cells[1, SGButtons.Row] + '"')
+         else
+            if DMBroadlink.QGetBLDevByName.FieldByName('Type').AsString  = 'WiFi Switch'
+            then
+               FileLines.Add('python broadlink_cli2 --device "' + DMBroadlink.QGetBLDevByName.FieldByName('HexType').AsString + ' ' + DMBroadlink.QGetBLDevByName.FieldByName('IP').AsString + ' ' + DMBroadlink.QGetBLDevByName.FieldByName('Mac').AsString + '" ' + SGButtons.Cells[1, SGButtons.Row]);
+
+      end;
 
    FileLines.SaveToFile(AppDir + '\Commands.bat');
 
@@ -507,7 +537,7 @@ var
    OutLines: TStringList;
    i: Integer;
    TmpStr: String;
-   NewDev: Boolean;
+   NewDev, ReloadDev: Boolean;
 
 begin
 
@@ -517,6 +547,8 @@ begin
 
          OutLines := TStringList.Create;
          OutLines.Text := Text;
+
+         ReloadDev := False;
 
          for i := 0 to OutLines.Count - 1 do
             begin
@@ -556,186 +588,306 @@ begin
                         begin
 
                            NewDev := True;
-                           FBLDevName.ShowModal;
+                           ReloadDev := True;
 
-                           DMBroadlink.TBLDevice.Insert;
-                           DMBroadlink.TBLDevice.FieldByName('Mac').AsString := FBLDevName.LEBLMacAdr.Text;
-                           DMBroadlink.TBLDevice.FieldByName('Name').AsString := FBLDevName.LEBLDevName.Text;
+                           if FBLDevName.ShowModal = mrOK
+                           then
+                              begin
+
+                                 DMBroadlink.TBLDevice.Insert;
+                                 DMBroadlink.TBLDevice.FieldByName('Mac').AsString := FBLDevName.LEBLMacAdr.Text;
+                                 DMBroadlink.TBLDevice.FieldByName('Name').AsString := FBLDevName.LEBLDevName.Text;
+                                 DMBroadlink.TBLDevice.FieldByName('Model').AsString := FBLDevName.LEBLModel.Text;
+                                 DMBroadlink.TBLDevice.FieldByName('IP').AsString := FBLDevName.LEBLIPAdr.Text;
+                                 DMBroadlink.TBLDevice.FieldByName('HexType').AsString := FBLDevName.LEBLHexType.Text;
+                                 DMBroadlink.TBLDevice.FieldByName('Type').AsString := FBLDevName.LEBLType.Text;
+                                 DMBroadlink.TBLDevice.FieldByName('Manufacturer').AsString := FBLDevName.LEBLManufacturer.Text;
+                                 DMBroadlink.TBLDevice.Post;
+
+                              end;
 
                         end
                      else
                         begin
+
                            NewDev := False;
+
                            DMBroadlink.TBLDevice.Edit;
+                           DMBroadlink.TBLDevice.FieldByName('Model').AsString := FBLDevName.LEBLModel.Text;
+                           DMBroadlink.TBLDevice.FieldByName('IP').AsString := FBLDevName.LEBLIPAdr.Text;
+                           DMBroadlink.TBLDevice.FieldByName('HexType').AsString := FBLDevName.LEBLHexType.Text;
+                           DMBroadlink.TBLDevice.FieldByName('Type').AsString := FBLDevName.LEBLType.Text;
+                           DMBroadlink.TBLDevice.FieldByName('Manufacturer').AsString := FBLDevName.LEBLManufacturer.Text;
+                           DMBroadlink.TBLDevice.Post;
+
                         end;
 
-                     DMBroadlink.TBLDevice.FieldByName('Model').AsString := FBLDevName.LEBLModel.Text;
-                     DMBroadlink.TBLDevice.FieldByName('IP').AsString := FBLDevName.LEBLIPAdr.Text;
-                     DMBroadlink.TBLDevice.FieldByName('HexType').AsString := FBLDevName.LEBLHexType.Text;
-                     DMBroadlink.TBLDevice.FieldByName('Type').AsString := FBLDevName.LEBLType.Text;
-                     DMBroadlink.TBLDevice.FieldByName('Manufacturer').AsString := FBLDevName.LEBLManufacturer.Text;
-                     DMBroadlink.TBLDevice.Post;
-
-                     if DMBroadlink.TBLDevice.FieldByName('Type').AsString = 'Universal WiFi Remote'
+                     if NewDev
                      then
-                        CBDevice.Items.Add(DMBroadlink.TBLDevice.FieldByName('Name').AsString + ' : ' + DMBroadlink.TBLDevice.FieldByName('Model').AsString + ' Universal WiFi Remote')
-                     else
-                        if NewDev
-                        then
-                           begin
+                        begin
 
-                              if DMBroadlink.TBLDevice.FieldByName('Type').AsString = 'WiFi Bulb'
-                              then
-                                 begin
+                           if DMBroadlink.TBLDevice.FieldByName('Type').AsString = 'WiFi Bulb'
+                           then
+                              begin
 
-                                    DMBroadlink.TBLButtons.Insert;
+                                 DMBroadlink.TBLButtons.Insert;
 
-                                    DMBroadlink.QGetBLButtonID.Close;
-                                    DMBroadlink.QGetBLButtonID.Open;
+                                 DMBroadlink.QGetBLButtonID.Close;
+                                 DMBroadlink.QGetBLButtonID.Open;
 
-                                    if DMBroadlink.QGetBLButtonID.FieldByName('NewID').IsNull
-                                    then
-                                        DMBroadlink.TBLButtons.FieldByName('ID').AsInteger := 1
-                                    else
-                                        DMBroadlink.TBLButtons.FieldByName('ID').AsInteger := DMBroadlink.QGetBLButtonID.FieldByName('NewID').AsInteger;
+                                 if DMBroadlink.QGetBLButtonID.FieldByName('NewID').IsNull
+                                 then
+                                     DMBroadlink.TBLButtons.FieldByName('ID').AsInteger := 1
+                                 else
+                                     DMBroadlink.TBLButtons.FieldByName('ID').AsInteger := DMBroadlink.QGetBLButtonID.FieldByName('NewID').AsInteger;
 
-                                    DMBroadlink.TBLButtons.FieldByName('DeviceMac').AsString := DMBroadlink.TBLDevice.FieldByName('Mac').AsString;
-                                    DMBroadlink.TBLButtons.FieldByName('Protected').AsBoolean := True;
-                                    DMBroadlink.TBLButtons.FieldByName('Name').AsString := 'Power On';
-                                    DMBroadlink.TBLButtons.FieldByName('Command').AsString := 'pwr=1';
-                                    DMBroadlink.TBLButtons.Post;
+                                 DMBroadlink.TBLButtons.FieldByName('DeviceMac').AsString := DMBroadlink.TBLDevice.FieldByName('Mac').AsString;
+                                 DMBroadlink.TBLButtons.FieldByName('Protected').AsBoolean := True;
+                                 DMBroadlink.TBLButtons.FieldByName('Name').AsString := 'Power On';
+                                 DMBroadlink.TBLButtons.FieldByName('Command').AsString := 'pwr=1';
+                                 DMBroadlink.TBLButtons.Post;
 
-                                    DMBroadlink.TBLButtons.Insert;
+                                 DMBroadlink.TBLButtons.Insert;
 
-                                    DMBroadlink.QGetBLButtonID.Close;
-                                    DMBroadlink.QGetBLButtonID.Open;
+                                 DMBroadlink.QGetBLButtonID.Close;
+                                 DMBroadlink.QGetBLButtonID.Open;
 
-                                    if DMBroadlink.QGetBLButtonID.FieldByName('NewID').IsNull
-                                    then
-                                        DMBroadlink.TBLButtons.FieldByName('ID').AsInteger := 1
-                                    else
-                                        DMBroadlink.TBLButtons.FieldByName('ID').AsInteger := DMBroadlink.QGetBLButtonID.FieldByName('NewID').AsInteger;
+                                 if DMBroadlink.QGetBLButtonID.FieldByName('NewID').IsNull
+                                 then
+                                     DMBroadlink.TBLButtons.FieldByName('ID').AsInteger := 1
+                                 else
+                                     DMBroadlink.TBLButtons.FieldByName('ID').AsInteger := DMBroadlink.QGetBLButtonID.FieldByName('NewID').AsInteger;
 
-                                    DMBroadlink.TBLButtons.FieldByName('DeviceMac').AsString := DMBroadlink.TBLDevice.FieldByName('Mac').AsString;
-                                    DMBroadlink.TBLButtons.FieldByName('Protected').AsBoolean := True;
-                                    DMBroadlink.TBLButtons.FieldByName('Name').AsString := 'Power Off';
-                                    DMBroadlink.TBLButtons.FieldByName('Command').AsString := 'pwr=0';
-                                    DMBroadlink.TBLButtons.Post;
+                                 DMBroadlink.TBLButtons.FieldByName('DeviceMac').AsString := DMBroadlink.TBLDevice.FieldByName('Mac').AsString;
+                                 DMBroadlink.TBLButtons.FieldByName('Protected').AsBoolean := True;
+                                 DMBroadlink.TBLButtons.FieldByName('Name').AsString := 'Power Off';
+                                 DMBroadlink.TBLButtons.FieldByName('Command').AsString := 'pwr=0';
+                                 DMBroadlink.TBLButtons.Post;
 
-//                                    DMBroadlink.TBLButtons.Insert;
-//
-//                                    DMBroadlink.QGetBLButtonID.Close;
-//                                    DMBroadlink.QGetBLButtonID.Open;
-//
-//                                    if DMBroadlink.QGetBLButtonID.FieldByName('NewID').IsNull
-//                                    then
-//                                        DMBroadlink.TBLButtons.FieldByName('ID').AsInteger := 1
-//                                    else
-//                                        DMBroadlink.TBLButtons.FieldByName('ID').AsInteger := DMBroadlink.QGetBLButtonID.FieldByName('NewID').AsInteger;
-//
-//                                    DMBroadlink.TBLButtons.FieldByName('DeviceMac').AsString := DMBroadlink.TBLDevice.FieldByName('Mac').AsString;
-//                                    DMBroadlink.TBLButtons.FieldByName('Protected').AsBoolean := True;
-//                                    DMBroadlink.TBLButtons.FieldByName('Name').AsString := 'Power Toggle';
-//                                    DMBroadlink.TBLButtons.FieldByName('Command').AsString := 'pwr=0';
-//                                    DMBroadlink.TBLButtons.Post;
+                                 DMBroadlink.TBLButtons.Insert;
 
-                                 end;
+                                 DMBroadlink.QGetBLButtonID.Close;
+                                 DMBroadlink.QGetBLButtonID.Open;
 
-                              if DMBroadlink.TBLDevice.FieldByName('Type').AsString = 'WiFi Switch'
-                              then
-                                 begin
+                                 if DMBroadlink.QGetBLButtonID.FieldByName('NewID').IsNull
+                                 then
+                                     DMBroadlink.TBLButtons.FieldByName('ID').AsInteger := 1
+                                 else
+                                     DMBroadlink.TBLButtons.FieldByName('ID').AsInteger := DMBroadlink.QGetBLButtonID.FieldByName('NewID').AsInteger;
 
-                                    DMBroadlink.TBLButtons.Insert;
+                                 DMBroadlink.TBLButtons.FieldByName('DeviceMac').AsString := DMBroadlink.TBLDevice.FieldByName('Mac').AsString;
+                                 DMBroadlink.TBLButtons.FieldByName('Protected').AsBoolean := True;
+                                 DMBroadlink.TBLButtons.FieldByName('Name').AsString := 'Red';
+                                 DMBroadlink.TBLButtons.FieldByName('Command').AsString := 'pwr=1 colormode=0 red=255 green=0 blue=0';
+                                 DMBroadlink.TBLButtons.Post;
 
-                                    DMBroadlink.QGetBLButtonID.Close;
-                                    DMBroadlink.QGetBLButtonID.Open;
+                                 DMBroadlink.TBLButtons.Insert;
 
-                                    if DMBroadlink.QGetBLButtonID.FieldByName('NewID').IsNull
-                                    then
-                                        DMBroadlink.TBLButtons.FieldByName('ID').AsInteger := 1
-                                    else
-                                        DMBroadlink.TBLButtons.FieldByName('ID').AsInteger := DMBroadlink.QGetBLButtonID.FieldByName('NewID').AsInteger;
+                                 DMBroadlink.QGetBLButtonID.Close;
+                                 DMBroadlink.QGetBLButtonID.Open;
 
-                                    DMBroadlink.TBLButtons.FieldByName('DeviceMac').AsString := DMBroadlink.TBLDevice.FieldByName('Mac').AsString;
-                                    DMBroadlink.TBLButtons.FieldByName('Protected').AsBoolean := True;
-                                    DMBroadlink.TBLButtons.FieldByName('Name').AsString := 'Power On';
-                                    DMBroadlink.TBLButtons.FieldByName('Command').AsString := '--turnon';
-                                    DMBroadlink.TBLButtons.Post;
+                                 if DMBroadlink.QGetBLButtonID.FieldByName('NewID').IsNull
+                                 then
+                                     DMBroadlink.TBLButtons.FieldByName('ID').AsInteger := 1
+                                 else
+                                     DMBroadlink.TBLButtons.FieldByName('ID').AsInteger := DMBroadlink.QGetBLButtonID.FieldByName('NewID').AsInteger;
 
-                                    DMBroadlink.TBLButtons.Insert;
+                                 DMBroadlink.TBLButtons.FieldByName('DeviceMac').AsString := DMBroadlink.TBLDevice.FieldByName('Mac').AsString;
+                                 DMBroadlink.TBLButtons.FieldByName('Protected').AsBoolean := True;
+                                 DMBroadlink.TBLButtons.FieldByName('Name').AsString := 'Green';
+                                 DMBroadlink.TBLButtons.FieldByName('Command').AsString := 'pwr=1 colormode=0 red=0 green=255 blue=0';
+                                 DMBroadlink.TBLButtons.Post;
 
-                                    DMBroadlink.QGetBLButtonID.Close;
-                                    DMBroadlink.QGetBLButtonID.Open;
+                                 DMBroadlink.TBLButtons.Insert;
 
-                                    if DMBroadlink.QGetBLButtonID.FieldByName('NewID').IsNull
-                                    then
-                                        DMBroadlink.TBLButtons.FieldByName('ID').AsInteger := 1
-                                    else
-                                        DMBroadlink.TBLButtons.FieldByName('ID').AsInteger := DMBroadlink.QGetBLButtonID.FieldByName('NewID').AsInteger;
+                                 DMBroadlink.QGetBLButtonID.Close;
+                                 DMBroadlink.QGetBLButtonID.Open;
 
-                                    DMBroadlink.TBLButtons.FieldByName('DeviceMac').AsString := DMBroadlink.TBLDevice.FieldByName('Mac').AsString;
-                                    DMBroadlink.TBLButtons.FieldByName('Protected').AsBoolean := True;
-                                    DMBroadlink.TBLButtons.FieldByName('Name').AsString := 'Power Off';
-                                    DMBroadlink.TBLButtons.FieldByName('Command').AsString := '--turnoff';
-                                    DMBroadlink.TBLButtons.Post;
+                                 if DMBroadlink.QGetBLButtonID.FieldByName('NewID').IsNull
+                                 then
+                                     DMBroadlink.TBLButtons.FieldByName('ID').AsInteger := 1
+                                 else
+                                     DMBroadlink.TBLButtons.FieldByName('ID').AsInteger := DMBroadlink.QGetBLButtonID.FieldByName('NewID').AsInteger;
 
-                                    DMBroadlink.TBLButtons.Insert;
+                                 DMBroadlink.TBLButtons.FieldByName('DeviceMac').AsString := DMBroadlink.TBLDevice.FieldByName('Mac').AsString;
+                                 DMBroadlink.TBLButtons.FieldByName('Protected').AsBoolean := True;
+                                 DMBroadlink.TBLButtons.FieldByName('Name').AsString := 'Blue';
+                                 DMBroadlink.TBLButtons.FieldByName('Command').AsString := 'pwr=1 colormode=0 red=0 green=0 blue=255';
+                                 DMBroadlink.TBLButtons.Post;
 
-                                    DMBroadlink.QGetBLButtonID.Close;
-                                    DMBroadlink.QGetBLButtonID.Open;
+                                 DMBroadlink.TBLButtons.Insert;
 
-                                    if DMBroadlink.QGetBLButtonID.FieldByName('NewID').IsNull
-                                    then
-                                        DMBroadlink.TBLButtons.FieldByName('ID').AsInteger := 1
-                                    else
-                                        DMBroadlink.TBLButtons.FieldByName('ID').AsInteger := DMBroadlink.QGetBLButtonID.FieldByName('NewID').AsInteger;
+                                 DMBroadlink.QGetBLButtonID.Close;
+                                 DMBroadlink.QGetBLButtonID.Open;
 
-                                    DMBroadlink.TBLButtons.FieldByName('DeviceMac').AsString := DMBroadlink.TBLDevice.FieldByName('Mac').AsString;
-                                    DMBroadlink.TBLButtons.FieldByName('Protected').AsBoolean := True;
-                                    DMBroadlink.TBLButtons.FieldByName('Name').AsString := 'Power Toggle';
-                                    DMBroadlink.TBLButtons.FieldByName('Command').AsString := '--switch';
-                                    DMBroadlink.TBLButtons.Post;
+                                 if DMBroadlink.QGetBLButtonID.FieldByName('NewID').IsNull
+                                 then
+                                     DMBroadlink.TBLButtons.FieldByName('ID').AsInteger := 1
+                                 else
+                                     DMBroadlink.TBLButtons.FieldByName('ID').AsInteger := DMBroadlink.QGetBLButtonID.FieldByName('NewID').AsInteger;
 
-                                    DMBroadlink.TBLButtons.Insert;
+                                 DMBroadlink.TBLButtons.FieldByName('DeviceMac').AsString := DMBroadlink.TBLDevice.FieldByName('Mac').AsString;
+                                 DMBroadlink.TBLButtons.FieldByName('Protected').AsBoolean := True;
+                                 DMBroadlink.TBLButtons.FieldByName('Name').AsString := 'Brightness 1';
+                                 DMBroadlink.TBLButtons.FieldByName('Command').AsString := 'pwr=1 brightness=10';
+                                 DMBroadlink.TBLButtons.Post;
 
-                                    DMBroadlink.QGetBLButtonID.Close;
-                                    DMBroadlink.QGetBLButtonID.Open;
+                                 DMBroadlink.TBLButtons.Insert;
 
-                                    if DMBroadlink.QGetBLButtonID.FieldByName('NewID').IsNull
-                                    then
-                                        DMBroadlink.TBLButtons.FieldByName('ID').AsInteger := 1
-                                    else
-                                        DMBroadlink.TBLButtons.FieldByName('ID').AsInteger := DMBroadlink.QGetBLButtonID.FieldByName('NewID').AsInteger;
+                                 DMBroadlink.QGetBLButtonID.Close;
+                                 DMBroadlink.QGetBLButtonID.Open;
 
-                                    DMBroadlink.TBLButtons.FieldByName('DeviceMac').AsString := DMBroadlink.TBLDevice.FieldByName('Mac').AsString;
-                                    DMBroadlink.TBLButtons.FieldByName('Protected').AsBoolean := True;
-                                    DMBroadlink.TBLButtons.FieldByName('Name').AsString := 'Nightlight On';
-                                    DMBroadlink.TBLButtons.FieldByName('Command').AsString := '--turnnlon';
-                                    DMBroadlink.TBLButtons.Post;
+                                 if DMBroadlink.QGetBLButtonID.FieldByName('NewID').IsNull
+                                 then
+                                     DMBroadlink.TBLButtons.FieldByName('ID').AsInteger := 1
+                                 else
+                                     DMBroadlink.TBLButtons.FieldByName('ID').AsInteger := DMBroadlink.QGetBLButtonID.FieldByName('NewID').AsInteger;
 
-                                    DMBroadlink.TBLButtons.Insert;
+                                 DMBroadlink.TBLButtons.FieldByName('DeviceMac').AsString := DMBroadlink.TBLDevice.FieldByName('Mac').AsString;
+                                 DMBroadlink.TBLButtons.FieldByName('Protected').AsBoolean := True;
+                                 DMBroadlink.TBLButtons.FieldByName('Name').AsString := 'Brightness 2';
+                                 DMBroadlink.TBLButtons.FieldByName('Command').AsString := 'pwr=1 brightness=30';
+                                 DMBroadlink.TBLButtons.Post;
 
-                                    DMBroadlink.QGetBLButtonID.Close;
-                                    DMBroadlink.QGetBLButtonID.Open;
+                                 DMBroadlink.TBLButtons.Insert;
 
-                                    if DMBroadlink.QGetBLButtonID.FieldByName('NewID').IsNull
-                                    then
-                                        DMBroadlink.TBLButtons.FieldByName('ID').AsInteger := 1
-                                    else
-                                        DMBroadlink.TBLButtons.FieldByName('ID').AsInteger := DMBroadlink.QGetBLButtonID.FieldByName('NewID').AsInteger;
+                                 DMBroadlink.QGetBLButtonID.Close;
+                                 DMBroadlink.QGetBLButtonID.Open;
 
-                                    DMBroadlink.TBLButtons.FieldByName('DeviceMac').AsString := DMBroadlink.TBLDevice.FieldByName('Mac').AsString;
-                                    DMBroadlink.TBLButtons.FieldByName('Protected').AsBoolean := True;
-                                    DMBroadlink.TBLButtons.FieldByName('Name').AsString := 'Nightlight Off';
-                                    DMBroadlink.TBLButtons.FieldByName('Command').AsString := '--turnnloff';
-                                    DMBroadlink.TBLButtons.Post;
+                                 if DMBroadlink.QGetBLButtonID.FieldByName('NewID').IsNull
+                                 then
+                                     DMBroadlink.TBLButtons.FieldByName('ID').AsInteger := 1
+                                 else
+                                     DMBroadlink.TBLButtons.FieldByName('ID').AsInteger := DMBroadlink.QGetBLButtonID.FieldByName('NewID').AsInteger;
 
-                                 end;
+                                 DMBroadlink.TBLButtons.FieldByName('DeviceMac').AsString := DMBroadlink.TBLDevice.FieldByName('Mac').AsString;
+                                 DMBroadlink.TBLButtons.FieldByName('Protected').AsBoolean := True;
+                                 DMBroadlink.TBLButtons.FieldByName('Name').AsString := 'Brightness 3';
+                                 DMBroadlink.TBLButtons.FieldByName('Command').AsString := 'pwr=1 brightness=60';
+                                 DMBroadlink.TBLButtons.Post;
 
-                           end;
+                                 DMBroadlink.TBLButtons.Insert;
+
+                                 DMBroadlink.QGetBLButtonID.Close;
+                                 DMBroadlink.QGetBLButtonID.Open;
+
+                                 if DMBroadlink.QGetBLButtonID.FieldByName('NewID').IsNull
+                                 then
+                                     DMBroadlink.TBLButtons.FieldByName('ID').AsInteger := 1
+                                 else
+                                     DMBroadlink.TBLButtons.FieldByName('ID').AsInteger := DMBroadlink.QGetBLButtonID.FieldByName('NewID').AsInteger;
+
+                                 DMBroadlink.TBLButtons.FieldByName('DeviceMac').AsString := DMBroadlink.TBLDevice.FieldByName('Mac').AsString;
+                                 DMBroadlink.TBLButtons.FieldByName('Protected').AsBoolean := True;
+                                 DMBroadlink.TBLButtons.FieldByName('Name').AsString := 'Brightness 4';
+                                 DMBroadlink.TBLButtons.FieldByName('Command').AsString := 'pwr=1 brightness=100';
+                                 DMBroadlink.TBLButtons.Post;
+
+                              end;
+
+                           if DMBroadlink.TBLDevice.FieldByName('Type').AsString = 'WiFi Switch'
+                           then
+                              begin
+
+                                 DMBroadlink.TBLButtons.Insert;
+
+                                 DMBroadlink.QGetBLButtonID.Close;
+                                 DMBroadlink.QGetBLButtonID.Open;
+
+                                 if DMBroadlink.QGetBLButtonID.FieldByName('NewID').IsNull
+                                 then
+                                     DMBroadlink.TBLButtons.FieldByName('ID').AsInteger := 1
+                                 else
+                                     DMBroadlink.TBLButtons.FieldByName('ID').AsInteger := DMBroadlink.QGetBLButtonID.FieldByName('NewID').AsInteger;
+
+                                 DMBroadlink.TBLButtons.FieldByName('DeviceMac').AsString := DMBroadlink.TBLDevice.FieldByName('Mac').AsString;
+                                 DMBroadlink.TBLButtons.FieldByName('Protected').AsBoolean := True;
+                                 DMBroadlink.TBLButtons.FieldByName('Name').AsString := 'Power On';
+                                 DMBroadlink.TBLButtons.FieldByName('Command').AsString := '--turnon';
+                                 DMBroadlink.TBLButtons.Post;
+
+                                 DMBroadlink.TBLButtons.Insert;
+
+                                 DMBroadlink.QGetBLButtonID.Close;
+                                 DMBroadlink.QGetBLButtonID.Open;
+
+                                 if DMBroadlink.QGetBLButtonID.FieldByName('NewID').IsNull
+                                 then
+                                     DMBroadlink.TBLButtons.FieldByName('ID').AsInteger := 1
+                                 else
+                                     DMBroadlink.TBLButtons.FieldByName('ID').AsInteger := DMBroadlink.QGetBLButtonID.FieldByName('NewID').AsInteger;
+
+                                 DMBroadlink.TBLButtons.FieldByName('DeviceMac').AsString := DMBroadlink.TBLDevice.FieldByName('Mac').AsString;
+                                 DMBroadlink.TBLButtons.FieldByName('Protected').AsBoolean := True;
+                                 DMBroadlink.TBLButtons.FieldByName('Name').AsString := 'Power Off';
+                                 DMBroadlink.TBLButtons.FieldByName('Command').AsString := '--turnoff';
+                                 DMBroadlink.TBLButtons.Post;
+
+                                 DMBroadlink.TBLButtons.Insert;
+
+                                 DMBroadlink.QGetBLButtonID.Close;
+                                 DMBroadlink.QGetBLButtonID.Open;
+
+                                 if DMBroadlink.QGetBLButtonID.FieldByName('NewID').IsNull
+                                 then
+                                     DMBroadlink.TBLButtons.FieldByName('ID').AsInteger := 1
+                                 else
+                                     DMBroadlink.TBLButtons.FieldByName('ID').AsInteger := DMBroadlink.QGetBLButtonID.FieldByName('NewID').AsInteger;
+
+                                 DMBroadlink.TBLButtons.FieldByName('DeviceMac').AsString := DMBroadlink.TBLDevice.FieldByName('Mac').AsString;
+                                 DMBroadlink.TBLButtons.FieldByName('Protected').AsBoolean := True;
+                                 DMBroadlink.TBLButtons.FieldByName('Name').AsString := 'Power Toggle';
+                                 DMBroadlink.TBLButtons.FieldByName('Command').AsString := '--switch';
+                                 DMBroadlink.TBLButtons.Post;
+
+                                 DMBroadlink.TBLButtons.Insert;
+
+                                 DMBroadlink.QGetBLButtonID.Close;
+                                 DMBroadlink.QGetBLButtonID.Open;
+
+                                 if DMBroadlink.QGetBLButtonID.FieldByName('NewID').IsNull
+                                 then
+                                     DMBroadlink.TBLButtons.FieldByName('ID').AsInteger := 1
+                                 else
+                                     DMBroadlink.TBLButtons.FieldByName('ID').AsInteger := DMBroadlink.QGetBLButtonID.FieldByName('NewID').AsInteger;
+
+                                 DMBroadlink.TBLButtons.FieldByName('DeviceMac').AsString := DMBroadlink.TBLDevice.FieldByName('Mac').AsString;
+                                 DMBroadlink.TBLButtons.FieldByName('Protected').AsBoolean := True;
+                                 DMBroadlink.TBLButtons.FieldByName('Name').AsString := 'Nightlight On';
+                                 DMBroadlink.TBLButtons.FieldByName('Command').AsString := '--turnnlon';
+                                 DMBroadlink.TBLButtons.Post;
+
+                                 DMBroadlink.TBLButtons.Insert;
+
+                                 DMBroadlink.QGetBLButtonID.Close;
+                                 DMBroadlink.QGetBLButtonID.Open;
+
+                                 if DMBroadlink.QGetBLButtonID.FieldByName('NewID').IsNull
+                                 then
+                                     DMBroadlink.TBLButtons.FieldByName('ID').AsInteger := 1
+                                 else
+                                     DMBroadlink.TBLButtons.FieldByName('ID').AsInteger := DMBroadlink.QGetBLButtonID.FieldByName('NewID').AsInteger;
+
+                                 DMBroadlink.TBLButtons.FieldByName('DeviceMac').AsString := DMBroadlink.TBLDevice.FieldByName('Mac').AsString;
+                                 DMBroadlink.TBLButtons.FieldByName('Protected').AsBoolean := True;
+                                 DMBroadlink.TBLButtons.FieldByName('Name').AsString := 'Nightlight Off';
+                                 DMBroadlink.TBLButtons.FieldByName('Command').AsString := '--turnnloff';
+                                 DMBroadlink.TBLButtons.Post;
+
+                              end;
+
+                           LoadDevices;
+
+                        end;
                   end;
 
             end;
+
+         if ReloadDev
+         then
+            LoadDevices;
+
+         LoadBLRemotes;
 
          if CBDevice.Items.Count > 0
          then
@@ -804,20 +956,6 @@ begin
 
    SGButtons.ColWidths[0] := 130;
 
-   CBDevice.Items.Clear;
-
-   CurrOperation := 'Discovery';
-
-   FileLines := TStringList.Create;
-   FileLines.Add(ExtractFileDrive(AppDir));
-   FileLines.Add('cd "' + AppDir + '"');
-   FileLines.Add('python broadlink_discovery2 --timeout 5 --dst-ip 192.168.0.255');
-   FileLines.SaveToFile(AppDir + '\Commands.bat');
-
-   Execute(AppDir + '\Commands.bat', ExecOut);
-
-   FileLines.DisposeOf;
-
    With TIniFile.Create(ExtractFileDir(Application.ExeName) + '\Broadlink.ini') do
       if ReadBool('Settings', 'ShowInst', True)
       then
@@ -831,7 +969,15 @@ begin
 
          end;
 
-   if CBDevice.Items.Count = 0
+   if DMBroadlink.TBLDevice.RecordCount = 0
+   then
+      if MessageDlg('There are no BroadLink devices defined. Do you want to scan for devices?', TMsgDlgType.mtInformation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], 0) = mrYes
+      then
+         ScanForDevices;
+
+   LoadBLRemotes;
+
+   if DMBroadlink.TBLDevice.RecordCount = 0
    then
       ShowMessage('No Broadlink devicea found. Are you connected to the same WiFi network as your device(s)? If you have not setup your device, you need to do it, using the mobile app.'
                   + 'After setting up the device you have to unlock the device in the mobile app. Tap on your device. Then tap the menu in right upper corner and choose "Property"');
@@ -843,6 +989,28 @@ begin
 
    DMBroadlink.UCCommonDB.Connected := False;
    DMBroadlink.FDCBL.Connected := False;
+
+end;
+
+procedure TFBroadlink.LoadBLRemotes;
+begin
+
+   CBDevice.Items.Clear;
+
+   DMBroadlink.QGetBLRemotes.Close;
+   DMBroadlink.QGetBLRemotes.Open;
+
+   while not DMBroadlink.QGetBLRemotes.Eof do
+      begin
+
+         CBDevice.Items.Add(DMBroadlink.QGetBLRemotes.FieldByName('Name').AsString + ' : ' + DMBroadlink.QGetBLRemotes.FieldByName('Model').AsString + ' Universal WiFi Remote');
+         DMBroadlink.QGetBLRemotes.Next;
+
+      end;
+
+   if CBDevice.Items.Count > 0
+   then
+      CBDevice.ItemIndex := 0;
 
 end;
 
@@ -1134,12 +1302,12 @@ begin
 
       end
    else
-      if SGDevice.Cells[3, SGDevice.Row] = 'WiFi Bulb'
-      then
+//      if SGDevice.Cells[3, SGDevice.Row] = 'WiFi Bulb'
+//      then
          begin
 
             DMBroadlink.QGetBLButtons.Close;
-            DMBroadlink.QGetBLButtons.ParamByName('DevName').AsString := SGDevice.Cells[0, SGDevice.Row];
+            DMBroadlink.QGetBLButtons.ParamByName('DeviceName').AsString := SGDevice.Cells[0, SGDevice.Row];
             DMBroadlink.QGetBLButtons.Open;
 
             while not DMBroadlink.QGetBLButtons.Eof do
@@ -1200,6 +1368,28 @@ begin
          SGDevice.Row := 1;
          LoadButtons;
       end;
+
+end;
+
+procedure TFBroadlink.MIDevScanClick(Sender: TObject);
+begin
+   ScanForDevices;
+end;
+
+procedure TFBroadlink.ScanForDevices;
+begin
+
+   CurrOperation := 'Discovery';
+
+   FileLines := TStringList.Create;
+   FileLines.Add(ExtractFileDrive(AppDir));
+   FileLines.Add('cd "' + AppDir + '"');
+   FileLines.Add('python broadlink_discovery2 --timeout 10 --dst-ip 192.168.0.255');
+   FileLines.SaveToFile(AppDir + '\Commands.bat');
+
+   Execute(AppDir + '\Commands.bat', ExecOut);
+
+   FileLines.DisposeOf;
 
 end;
 

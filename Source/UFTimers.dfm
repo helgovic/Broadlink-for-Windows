@@ -4,8 +4,8 @@ object FTimers: TFTimers
   BorderStyle = bsToolWindow
   BorderWidth = 1
   Caption = 'Timers'
-  ClientHeight = 439
-  ClientWidth = 622
+  ClientHeight = 411
+  ClientWidth = 610
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,8 +19,8 @@ object FTimers: TFTimers
   TextHeight = 15
   object Panel1: TPanel
     Left = 0
-    Top = 354
-    Width = 622
+    Top = 326
+    Width = 610
     Height = 85
     Align = alBottom
     BevelOuter = bvNone
@@ -49,8 +49,8 @@ object FTimers: TFTimers
   object SBTimers: TScrollBox
     Left = 0
     Top = 0
-    Width = 622
-    Height = 354
+    Width = 610
+    Height = 326
     Align = alClient
     BevelEdges = []
     BevelInner = bvNone

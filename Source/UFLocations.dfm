@@ -3,8 +3,8 @@ object FLocations: TFLocations
   Top = 0
   BorderStyle = bsToolWindow
   Caption = 'Locations'
-  ClientHeight = 441
-  ClientWidth = 624
+  ClientHeight = 413
+  ClientWidth = 612
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,12 +18,14 @@ object FLocations: TFLocations
   TextHeight = 15
   object Panel1: TPanel
     Left = 0
-    Top = 356
-    Width = 624
+    Top = 328
+    Width = 612
     Height = 85
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitTop = 314
+    ExplicitWidth = 606
     object BAddLocation: TButton
       Left = 85
       Top = 22
@@ -66,8 +68,8 @@ object FLocations: TFLocations
     AlignWithMargins = True
     Left = 5
     Top = 3
-    Width = 616
-    Height = 350
+    Width = 604
+    Height = 322
     Cursor = crDefault
     Margins.Left = 5
     Align = alClient
@@ -126,7 +128,7 @@ object FLocations: TFLocations
     FilterDropDown.Font.Name = 'Segoe UI'
     FilterDropDown.Font.Style = []
     FilterDropDownClear = '(All)'
-    FixedColWidth = 60
+    FixedColWidth = 48
     FixedRowHeight = 22
     FixedFont.Charset = DEFAULT_CHARSET
     FixedFont.Color = clBlack
@@ -170,10 +172,10 @@ object FLocations: TFLocations
     SearchFooter.HintHighlight = 'Highlight occurrences'
     SearchFooter.MatchCaseCaption = 'Match case'
     Version = '6.2.1.1'
-    ExplicitLeft = 3
-    ExplicitWidth = 618
+    ExplicitWidth = 598
+    ExplicitHeight = 308
     ColWidths = (
-      60
+      48
       64
       64
       427)

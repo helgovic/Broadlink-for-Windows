@@ -3,8 +3,8 @@ object FAddButton: TFAddButton
   Top = 0
   BorderStyle = bsToolWindow
   BorderWidth = 1
-  ClientHeight = 501
-  ClientWidth = 618
+  ClientHeight = 473
+  ClientWidth = 606
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText

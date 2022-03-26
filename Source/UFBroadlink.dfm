@@ -4,8 +4,8 @@ object FBroadlink: TFBroadlink
   BorderStyle = bsToolWindow
   BorderWidth = 1
   Caption = 'Broadlink for Windows'
-  ClientHeight = 547
-  ClientWidth = 1232
+  ClientHeight = 519
+  ClientWidth = 1220
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -23,17 +23,17 @@ object FBroadlink: TFBroadlink
     Left = 0
     Top = 33
     Width = 600
-    Height = 389
+    Height = 361
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitHeight = 375
+    ExplicitHeight = 347
     object SGDevice: TAdvStringGrid
       AlignWithMargins = True
       Left = 10
       Top = 3
       Width = 587
-      Height = 383
+      Height = 355
       Cursor = crDefault
       Margins.Left = 10
       Align = alClient
@@ -152,7 +152,7 @@ object FBroadlink: TFBroadlink
       ShowDesignHelper = False
       Version = '6.2.1.1'
       WordWrap = False
-      ExplicitHeight = 369
+      ExplicitHeight = 341
       ColWidths = (
         374
         20
@@ -166,14 +166,14 @@ object FBroadlink: TFBroadlink
   end
   object Panel2: TPanel
     Left = 0
-    Top = 422
-    Width = 1232
+    Top = 394
+    Width = 1220
     Height = 125
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 4
-    ExplicitTop = 408
-    ExplicitWidth = 1226
+    ExplicitTop = 380
+    ExplicitWidth = 1214
     object Label3: TLabel
       Left = 351
       Top = 10
@@ -373,12 +373,12 @@ object FBroadlink: TFBroadlink
   object Panel3: TPanel
     Left = 0
     Top = 0
-    Width = 1232
+    Width = 1220
     Height = 33
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitWidth = 1226
+    ExplicitWidth = 1214
     object Label1: TLabel
       Left = 10
       Top = 15
@@ -397,19 +397,19 @@ object FBroadlink: TFBroadlink
   object Panel4: TPanel
     Left = 600
     Top = 33
-    Width = 632
-    Height = 389
+    Width = 620
+    Height = 361
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 3
-    ExplicitWidth = 626
-    ExplicitHeight = 375
+    ExplicitWidth = 614
+    ExplicitHeight = 347
     object SGButtons: TAdvStringGrid
       AlignWithMargins = True
       Left = 3
       Top = 3
-      Width = 626
-      Height = 383
+      Width = 614
+      Height = 355
       Cursor = crDefault
       Align = alClient
       BevelEdges = []
@@ -524,8 +524,8 @@ object FBroadlink: TFBroadlink
       ShowDesignHelper = False
       Version = '6.2.1.1'
       WordWrap = False
-      ExplicitWidth = 620
-      ExplicitHeight = 369
+      ExplicitWidth = 608
+      ExplicitHeight = 341
       ColWidths = (
         644
         42)
@@ -540,7 +540,7 @@ object FBroadlink: TFBroadlink
     Left = 75
     Top = 75
     object Settings: TMenuItem
-      Caption = 'File'
+      Caption = 'Settings'
       object RunOnWinStartMI: TMenuItem
         AutoCheck = True
         Caption = 'Run on Windows start'
@@ -563,6 +563,10 @@ object FBroadlink: TFBroadlink
       object MILocations: TMenuItem
         Caption = 'Locations'
         OnClick = MILocationsClick
+      end
+      object MIDevScan: TMenuItem
+        Caption = 'Scan for devices'
+        OnClick = MIDevScanClick
       end
     end
   end

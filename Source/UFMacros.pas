@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, AdvUtil,
-  Vcl.Grids, AdvObj, BaseGrid, AdvGrid, AdvEdit, FireDAC.Stan.Param, System.UITypes;
+  Vcl.Grids, AdvObj, BaseGrid, AdvGrid, AdvEdit, FireDAC.Stan.Param, System.UITypes, Data.DB;
 
 type
 
