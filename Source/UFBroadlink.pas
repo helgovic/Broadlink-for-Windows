@@ -101,6 +101,9 @@ implementation
 uses JclSysUtils, JclStrings, UFAddDevice, UFAddButton, UFBLDev, UFMacros, UFSetUpBl, Registry, UFInstructions,
      UDMBroadlink, UFShareInfo, UFAddLightButton, UFTimers, UFLocations, GpTimezone;
 
+var
+   StartScan: Boolean = True;
+
 function GetSunUpDown(Up: Boolean; Date: TDateTime; Latt, Long: String): TDateTime;
 
 var
@@ -474,8 +477,8 @@ begin
    FileLines.Add(ExtractFileDrive(AppDir));
    FileLines.Add('cd "' + AppDir + '"');
 
-   if (FBroadlink.SGDevice.Cells[0, FBroadlink.SGDevice.Row] = 'RF') or
-      (FBroadlink.SGDevice.Cells[0, FBroadlink.SGDevice.Row] = 'IR')
+   if (FBroadlink.SGDevice.Cells[3, FBroadlink.SGDevice.Row] = 'RF') or
+      (FBroadlink.SGDevice.Cells[3, FBroadlink.SGDevice.Row] = 'IR')
    then
       begin
 
@@ -583,34 +586,37 @@ begin
                      then
                         FBLDevName.LEBLType.Text := 'WiFi Bulb';
 
+                     NewDev := False;
+
                      if not DMBroadlink.TBLDevice.FindKey([FBLDevName.LEBLMacAdr.Text])
                      then
-                        begin
+                        if not StartScan
+                        then
+                           begin
 
-                           NewDev := True;
-                           ReloadDev := True;
+                              NewDev := True;
+                              ReloadDev := True;
 
-                           if FBLDevName.ShowModal = mrOK
-                           then
-                              begin
+                              if FBLDevName.ShowModal = mrOK
+                              then
+                                 begin
 
-                                 DMBroadlink.TBLDevice.Insert;
-                                 DMBroadlink.TBLDevice.FieldByName('Mac').AsString := FBLDevName.LEBLMacAdr.Text;
-                                 DMBroadlink.TBLDevice.FieldByName('Name').AsString := FBLDevName.LEBLDevName.Text;
-                                 DMBroadlink.TBLDevice.FieldByName('Model').AsString := FBLDevName.LEBLModel.Text;
-                                 DMBroadlink.TBLDevice.FieldByName('IP').AsString := FBLDevName.LEBLIPAdr.Text;
-                                 DMBroadlink.TBLDevice.FieldByName('HexType').AsString := FBLDevName.LEBLHexType.Text;
-                                 DMBroadlink.TBLDevice.FieldByName('Type').AsString := FBLDevName.LEBLType.Text;
-                                 DMBroadlink.TBLDevice.FieldByName('Manufacturer').AsString := FBLDevName.LEBLManufacturer.Text;
-                                 DMBroadlink.TBLDevice.Post;
+                                    DMBroadlink.TBLDevice.Insert;
+                                    DMBroadlink.TBLDevice.FieldByName('Mac').AsString := FBLDevName.LEBLMacAdr.Text;
+                                    DMBroadlink.TBLDevice.FieldByName('Name').AsString := FBLDevName.LEBLDevName.Text;
+                                    DMBroadlink.TBLDevice.FieldByName('Model').AsString := FBLDevName.LEBLModel.Text;
+                                    DMBroadlink.TBLDevice.FieldByName('IP').AsString := FBLDevName.LEBLIPAdr.Text;
+                                    DMBroadlink.TBLDevice.FieldByName('HexType').AsString := FBLDevName.LEBLHexType.Text;
+                                    DMBroadlink.TBLDevice.FieldByName('Type').AsString := FBLDevName.LEBLType.Text;
+                                    DMBroadlink.TBLDevice.FieldByName('Manufacturer').AsString := FBLDevName.LEBLManufacturer.Text;
+                                    DMBroadlink.TBLDevice.Post;
 
-                              end;
+                                 end;
 
-                        end
+                           end
+                        else
                      else
                         begin
-
-                           NewDev := False;
 
                            DMBroadlink.TBLDevice.Edit;
                            DMBroadlink.TBLDevice.FieldByName('Model').AsString := FBLDevName.LEBLModel.Text;
@@ -973,9 +979,9 @@ begin
    then
       if MessageDlg('There are no BroadLink devices defined. Do you want to scan for devices?', TMsgDlgType.mtInformation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], 0) = mrYes
       then
-         ScanForDevices;
+         StartScan := False;
 
-   LoadBLRemotes;
+   ScanForDevices;
 
    if DMBroadlink.TBLDevice.RecordCount = 0
    then

@@ -5,8 +5,8 @@ object FAddLightButton: TFAddLightButton
   BorderStyle = bsToolWindow
   BorderWidth = 1
   Caption = 'Add Light Button'
-  ClientHeight = 364
-  ClientWidth = 737
+  ClientHeight = 350
+  ClientWidth = 731
   Color = clBtnFace
   CustomTitleBar.Height = 2
   Font.Charset = DEFAULT_CHARSET
@@ -68,14 +68,12 @@ object FAddLightButton: TFAddLightButton
   end
   object Panel1: TPanel
     Left = 0
-    Top = 283
-    Width = 737
+    Top = 269
+    Width = 731
     Height = 81
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 7
-    ExplicitTop = 269
-    ExplicitWidth = 731
     object BLBTest: TButton
       Left = 370
       Top = 16

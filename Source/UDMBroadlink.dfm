@@ -432,7 +432,7 @@ object DMBroadlink: TDMBroadlink
     Server = 'sql697.main-hosting.eu'
     LoginPrompt = False
     OnConnectionLost = UCCommonDBConnectionLost
-    Left = 887
+    Left = 889
     Top = 539
     EncryptedPassword = 'B7FF9AFF95FF90FFCBFFCFFFC8FFC8FF'
   end

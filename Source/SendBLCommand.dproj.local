@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
 	<Transactions>
-    <Transaction>1899-12-30 00:00:00.000.484,=C:\Users\Helge\Documents\Embarcadero\Studio\Projects\Unit15.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.996,=C:\Users\Helge\Documents\Embarcadero\Studio\Projects\Unit15.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.360,=C:\Users\Helge\Documents\Embarcadero\Studio\Projects\Unit15.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.824,D:\Deplhi\Broadlink\SendBLCommand.dproj=D:\Deplhi\Broadlink\CopyData.dproj</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.543,C:\Users\Helge\Documents\Embarcadero\Studio\Projects\Project16.dproj=D:\Deplhi\CopyData\CopyData.dproj</Transaction>
     <Transaction>1899-12-30 00:00:00.000.290,=C:\Users\Helge\Documents\Embarcadero\Studio\Projects\Unit15.pas</Transaction>
     <Transaction>1899-12-30 00:00:00.000.181,=C:\Users\Helge\Documents\Embarcadero\Studio\Projects\Unit15.pas</Transaction>
     <Transaction>1899-12-30 00:00:00.000.721,=C:\Users\Helge\Documents\Embarcadero\Studio\Projects\Unit15.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.824,D:\Deplhi\Broadlink\CopyData.dproj=D:\Deplhi\Broadlink\SendBLCommand.dproj</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.543,D:\Deplhi\CopyData\CopyData.dproj=C:\Users\Helge\Documents\Embarcadero\Studio\Projects\Project16.dproj</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.484,=C:\Users\Helge\Documents\Embarcadero\Studio\Projects\Unit15.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.996,=C:\Users\Helge\Documents\Embarcadero\Studio\Projects\Unit15.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.360,=C:\Users\Helge\Documents\Embarcadero\Studio\Projects\Unit15.pas</Transaction>
   </Transactions>
 </BorlandProject>
