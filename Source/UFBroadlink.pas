@@ -1379,6 +1379,7 @@ end;
 
 procedure TFBroadlink.MIDevScanClick(Sender: TObject);
 begin
+   StartScan := False;
    ScanForDevices;
 end;
 
