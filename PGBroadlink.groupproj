@@ -1,0 +1,48 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{0F3935FE-FAF0-4B6E-B379-603F008C6957}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="WinBroadlink.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="SendBLCommand.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="WinBroadlink">
+        <MSBuild Projects="WinBroadlink.dproj"/>
+    </Target>
+    <Target Name="WinBroadlink:Clean">
+        <MSBuild Projects="WinBroadlink.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="WinBroadlink:Make">
+        <MSBuild Projects="WinBroadlink.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="SendBLCommand">
+        <MSBuild Projects="SendBLCommand.dproj"/>
+    </Target>
+    <Target Name="SendBLCommand:Clean">
+        <MSBuild Projects="SendBLCommand.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="SendBLCommand:Make">
+        <MSBuild Projects="SendBLCommand.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="WinBroadlink;SendBLCommand"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="WinBroadlink:Clean;SendBLCommand:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="WinBroadlink:Make;SendBLCommand:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>
