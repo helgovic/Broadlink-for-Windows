@@ -2,7 +2,6 @@ object DMBroadlink: TDMBroadlink
   OnCreate = DataModuleCreate
   Height = 797
   Width = 1077
-  PixelsPerInch = 96
   object FDCBL: TFDConnection
     Params.Strings = (
       'DriverID=SQLite'
@@ -423,13 +422,13 @@ object DMBroadlink: TDMBroadlink
   object UCCommonDB: TUniConnection
     ProviderName = 'MySQL'
     Port = 3306
-    Database = 'u668430387_BroadlinkDB'
+    Database = 'softmagical_dk_db_broadlink'
     SpecificOptions.Strings = (
       'MySQL.Interactive=True')
     Options.KeepDesignConnected = False
     Options.LocalFailover = True
-    Username = 'u668430387_Broadlink'
-    Server = 'sql697.main-hosting.eu'
+    Username = 'softmagical_dk'
+    Server = 'mysql89.unoeuro.com'
     LoginPrompt = False
     OnConnectionLost = UCCommonDBConnectionLost
     Left = 889
@@ -521,7 +520,7 @@ object DMBroadlink: TDMBroadlink
     Connection = UCCommonDB
     Options.SetFieldsReadOnly = False
     Left = 75
-    Top = 713
+    Top = 715
   end
   object TCommonDevice: TUniTable
     TableName = 'Device'
