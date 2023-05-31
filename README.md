@@ -25,8 +25,8 @@ How to use the commandline interface.
    Parameters:
 
       --help Get parameterinfo
-      --sendcmd "Your Broadlink device name (e.g. "MyBLDevice")" "Device name" "Button name" 
-      --sendmacro "Your Broadlink device name (e.g. "MyBLDevice")" "Macro name"
+      --sendcmd "Your Broadlink remote device name (e.g. "MyBLDevice")" "Device name" "Button name" 
+      --sendmacro "Your Broadlink remote device name (e.g. "MyBLDevice")" "Macro name"
       --sendwificmd "Your Broadlink device name (e.g. "Dinnertable light")" "ButtonName"
 
 Sharing of device codes:
