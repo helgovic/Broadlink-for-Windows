@@ -32,4 +32,4 @@ How to use the commandline interface.
 Sharing of device codes:
 
 I have created a cloud database, to share device codes.
-If you want to utilize the shared database from another platform/app, you can send a mail to helgovic@hotmail.dk to get database specifics
+If you want to utilize the shared database from another platform/app, you can see database information in "Database Specs"
