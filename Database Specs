@@ -1,0 +1,25 @@
+DBMS: MYSql
+Server: sql697.main-hosting.eu
+Port: 3306
+DatabaseName: u668430387_BroadlinkDB
+UserName: u668430387_Broadlink
+Password: Hejo4077
+
+DDL:
+
+CREATE TABLE `Manufacturer` (
+  `ID` bigint(20) NOT NULL,
+  `Name` text COLLATE utf8mb4_unicode_ci NOT NULL}
+
+CREATE TABLE `Device` (
+  `ID` bigint(20) NOT NULL,
+  `ManufacturerID` bigint(20) NOT NULL,
+  `ModelName` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `IR` tinyint(1) NOT NULL}
+
+CREATE TABLE `Buttons` (
+  `ID` bigint(20) NOT NULL,
+  `Name` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `DeviceID` bigint(20) NOT NULL,
+  `Code` text COLLATE utf8mb4_unicode_ci NOT NULL} 
+
